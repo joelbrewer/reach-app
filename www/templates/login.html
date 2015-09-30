@@ -1,0 +1,30 @@
+<ion-view hide-nav-bar="true" ng-controller="RegistrationController as vm">
+  <ion-content scroll="false" padding="true" class="page login">
+<center>
+    <div class="reach-logo">
+      <img src="img/reach_cloud.png">
+    </div>
+    <h1>Reach</h1>
+</center>
+    <form ng-submit="vm.loginUser()">
+      <div class="list list-inset">
+        <label class="item item-input">
+          <input type="text" placeholder="Email" ng-model="vm.credentials.email">
+        </label>
+        <label class="item item-input">
+          <input type="password" placeholder="Password"
+          ng-model="vm.credentials.password">
+        </label>
+      </div>
+      <ul class="button-bars">
+        <li>
+          <button type="submit" class="button button-custom button-block button-glass">Sign In</button>
+        </li>
+        <li>
+          <button type="button" class="button button-custom button-block button-dark">Create Account</button>
+        </li>
+      </ul>
+    </form>
+  </ion-content>
+</ion-view>
+

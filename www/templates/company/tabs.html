@@ -1,0 +1,30 @@
+
+<ion-nav-bar  class="bar-balanced">
+<div>
+<ion-nav-buttons side="right">
+<div class="buttons">
+        <button class="button button-icon ion-more" ng-click="popover.show($event)">
+        </button>
+</div>
+
+</ion-nav-buttons>
+</div>
+</ion-nav-bar>
+
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+
+  <!-- Profile Tab -->
+  <ion-tab title="Profile" icon-off="ion-ios-home-outline" icon-on="ion-ios-home" href="#/company/profile">
+    <ion-nav-view name="tab-profile"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Bulletins Tab -->
+  <ion-tab title="Bulletins" icon-off="ion-ios-star-outline" icon-on="ion-ios-star" href="#/company/bulletins">
+    <ion-nav-view name="tab-bulletins"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Users Tab -->
+  <ion-tab title="Users" icon-off="ion-ios-people-outline" icon-on="ion-ios-people" href="#/company/users">
+    <ion-nav-view name="tab-users"></ion-nav-view>
+  </ion-tab>
+</ion-tabs>
