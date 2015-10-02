@@ -79,6 +79,16 @@
     templateUrl: 'templates/company/chat.html',
     controller: 'BasicController as vm'
   })
+  .state('company-bulletin-add', {
+    url: '/company/bulletin/add',
+    templateUrl: 'templates/company/bulletin-add.html',
+    controller: 'BasicController as vm'
+  })
+  .state('company-user-add', {
+    url: '/company/user/add',
+    templateUrl: 'templates/company/user-add.html',
+    controller: 'BasicController as vm'
+  })
 ;
 
   $urlRouterProvider.otherwise('/login');
