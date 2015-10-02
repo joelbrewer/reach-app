@@ -65,6 +65,15 @@
       }
     }
   })
+  .state('tab.feed', {
+    url: '/feed',
+    views: {
+      'tab-feed' : {
+        templateUrl: 'templates/company/feed.html',
+        controller: 'BasicController as vm'
+      }
+    }
+  })
   .state('company-chat', {
     url: '/company/chat',
     templateUrl: 'templates/company/chat.html',
