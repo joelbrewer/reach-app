@@ -6,9 +6,9 @@
     .module('starter')
     .factory('AuthenticationService', AuthenticationService);
 
-  AuthenticationService.$inject = ['SessionService', '$http', 'API', 'DataService'];
+  AuthenticationService.$inject = ['SessionService', '$http', 'API', 'DataService', 'jwtHelper'];
 
-  function AuthenticationService(SessionService, $http, API, DataService) {
+  function AuthenticationService(SessionService, $http, API, DataService, jwtHelper) {
     var service = {};
     service.login = login;
     service.cacheSession = cacheSession;
@@ -23,7 +23,8 @@
 
       return $http({ 
         method: 'POST', 
-        url: API.url + '/login', 
+        url: API.url + '/login',
+        skipAuthorization: true, 
         data: "email=" + credentials.email + "&password=" + credentials.password, 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
          
@@ -35,10 +36,12 @@
 
     function cacheSession(data) {
       SessionService.set('authenticated', true);
-      SessionService.set('user', angular.toJson(data));
-      SessionService.set('uid', data.uid);
+      SessionService.set('jwt', data.jwt);
+      var decoded = jwtHelper.decodeToken(data.jwt)
+      SessionService.set('uid', decoded['data']['userId']);
+      SessionService.setJson('perms', decoded['data']['perms']);
       console.log('Session cached.');
-      SessionService.set('auth_token', data.auth_token);
+      //SessionService.set('auth_token', data.auth_token);
     }
   }
 })();
