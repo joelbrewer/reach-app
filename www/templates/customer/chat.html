@@ -5,47 +5,31 @@
   </ion-nav-back-button>
 </ion-nav-bar>
 <ion-content scroll="true"> 
-
-             <div ng-repeat="message in messages" class="message-wrapper"
-                  on-hold="onMessageHold($event, $index, message)">
-      
-                  <div ng-if="user._id !== message.userId">
-                      
-                    <img ng-click="viewProfile(message)" class="profile-pic left" 
-                          ng-src="{{toUser.pic}}" onerror="onProfilePicError(this)" />
-      
+             <div ng-repeat="message in messages" class="message-wrapper">
+                  <div ng-if="uid !== message.recipient_user_id">
+                    <img class="profile-pic left" src="img/default-avatar.png" onerror="onProfilePicError(this)" />
                       <div class="chat-bubble left">
-      
-                          <div class="message" ng-bind-html="message.text" autolinker>
-                          </div>
-      
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
-                                  class="bold">{{toUser.username}}</span>,
-                              <span am-time-ago="message.date"></span>
+                                  class="bold">You</span>
+                              <span>{{message.timestamp_queued}}</span>
                           </div>
-      
+                          <div class="message" ng-bind-html="message.message_content" autolinker>
+                          </div>
                       </div>
                   </div>
       
-                  <div ng-if="user._id === message.userId">
-                    
-                       <img ng-click="viewProfile(message)" class="profile-pic right" 
-                          ng-src="{{user.pic}}" onerror="onProfilePicError(this)" />
-                    
+                  <div ng-if="uid === message.recipient_user_id">
+                       <img class="profile-pic right" src="img/default-avatar.png" />
                       <div class="chat-bubble right">
-      
-                          <div class="message" ng-bind-html="message.text " autolinker>
-                          </div>
-      
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
-                                  class="bold">{{user.username}}</span>, 
-                              <span am-time-ago="message.date"></span>
+                                  class="bold">{{user.first_name}} {{user.last_name}}</span> 
+                              <span >{{message.timestamp_queued}}</span>
                           </div>
-      
+                          <div class="message" ng-bind-html="message.message_content " autolinker>
+                          </div>
                       </div>
-                    
                   </div>
       
                   <div class="cf"></div>
@@ -58,9 +42,9 @@
 <div class="bar bar-footer bar-dark  item-input-inset">
   <label class="item-input-wrapper">
     <i class="icon ion-chatbox placeholder-icon"></i>
-    <input type="text" placeholder="Type message here...">
+    <input ng-model="chat.content" type="text" placeholder="Type message here...">
   </label>
-  <button class="button button-clear">
+  <button class="button button-clear" ng-click="send_chat(chat);">
    Send 
   </button>
 

@@ -6,9 +6,9 @@
     .module('starter')
     .factory('AuthenticationService', AuthenticationService);
 
-  AuthenticationService.$inject = ['SessionService', '$http', 'API', 'DataService', 'jwtHelper'];
+  AuthenticationService.$inject = ['SessionService', '$http', 'API', 'DataService','NavigationService', 'jwtHelper'];
 
-  function AuthenticationService(SessionService, $http, API, DataService, jwtHelper) {
+  function AuthenticationService(SessionService, $http, API, DataService, NavigationService, jwtHelper) {
     var service = {};
     service.login = login;
     service.cacheSession = cacheSession;
@@ -27,21 +27,20 @@
         skipAuthorization: true, 
         data: "email=" + credentials.email + "&password=" + credentials.password, 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-         
       }).success(function(data) { 
         cacheSession(data);
       });  
-
     }
 
     function cacheSession(data) {
       SessionService.set('authenticated', true);
       SessionService.set('jwt', data.jwt);
       var decoded = jwtHelper.decodeToken(data.jwt)
-      SessionService.set('uid', decoded['data']['userId']);
-      SessionService.setJson('perms', decoded['data']['perms']);
+      SessionService.setJson('uid', decoded['data']['userId']);
+      SessionService.setJson('roles', decoded['data']['roles']);
+      SessionService.setJson('companies', decoded['data']['companies']);
       console.log('Session cached.');
-      //SessionService.set('auth_token', data.auth_token);
+      SessionService.set('auth_token', data.auth_token);
     }
   }
 })();
@@ -58,18 +57,27 @@
   function DataService(SessionService, $http, API, $q) {
 
     var service = {
+        getCurrentUserId : getCurrentUserId,
         getEmployees : getEmployees,
         getCustomers : getCustomers,
         getCompanies : getCompanies,
+        getCustomerFeed : getCustomerFeed,
+        getMessages: getMessages,
         getCompany : getCompany,
         getUser : getUser,
         sendMessage : sendMessage
     };
 
+    function getCurrentUserId(){
+
+      return 1; 
+
+    }
+
     function getUser(uid){
 
       return $http({method:'GET', url:API.url + '/user/'+uid})
-        .success(function(resulty) {
+        .then(function(resulty) {
 //alert(angular.toJson(resulty.data));
             return resulty.data;
         });
@@ -97,20 +105,38 @@
 
     function getCompanies(){
 
+//      var companies = SessionService.getJson('companies');
+//      if(companies !== null){
+//        return companies;
+//      }
       return $http({method:'GET', url:API.url + '/company'})
-        .success(function(resulty) {
-            SessionService.setJson('company_list',resulty.data);
-//alert(angular.toJson(resulty.data));
+        .then(function(resulty) {
+            SessionService.setJson('companies',resulty);
             return resulty.data;
         });
-//alert(angular.toJson(deferred));
     }
 
     function getCompany(cid){
-
       return $http({method:'GET', url:API.url + '/company/'+cid})
         .success(function(resulty) {
 //alert(angular.toJson(resulty.data));
+            return resulty.data;
+        });
+    }
+
+    function getMessages(uid) {
+      return $http({method:'GET', url:API.url + '/message/'+uid})
+        .then(function(resulty) {
+            SessionService.setJson('user_messages-'+uid, resulty.data);
+            return resulty.data;
+        });
+    }
+
+
+    function getCustomerFeed(uid) {
+      return $http({method:'GET', url:API.url + '/feed/'+uid})
+        .then(function(resulty) {
+            SessionService.setJson('customer_feed',resulty.data);
             return resulty.data;
         });
     }
@@ -124,7 +150,7 @@
         data: "sender_uid="+sender_uid+"&recipient_uid="+recipient_uid+"&message_content="+message_content, 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
          
-      }).success(function(data) { 
+      }).then(function(data) { 
       });  
 
     }
@@ -141,7 +167,10 @@
     .factory('NavigationService', NavigationService);
 
   function NavigationService() {
-    var service = {}
+
+    var service = {};
+    service.selected_company = '1';
+    service.roles = '{}';
     service.setLocation = setLocation;
     return service;
   }

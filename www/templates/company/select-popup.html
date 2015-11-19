@@ -1,65 +1,16 @@
-      <ion-popover-view>
-        <ion-content scroll="true">
+<ion-popover-view>
+<ion-content scroll="true">
 <div class="list">
-
-  <label class="item item-radio ">
-    <input type="radio" name="group"  checked="checked">
+<form>
+  <label ng-repeat="company in companies" class="item item-radio">
+    <input type="radio" name="group" ng-model="NavigationService.selected_company" value="{{company.id}}">
     <div class="item-content">
-      Gym Fed
+      {{company.name}}
     </div>
     <i class="radio-icon ion-checkmark"></i>
   </label>
-  <label class="item item-radio">
-    <input type="radio" name="group">
-    <div class="item-content">
-      Brewer Digital
-    </div>
-    <i class="radio-icon ion-checkmark"></i>
-  </label>
-  <label class="item item-radio">
-    <input type="radio" name="group">
-    <div class="item-content">
-      Fitness One
-    </div>
-    <i class="radio-icon ion-checkmark"></i>
-  </label>
-  <label class="item item-radio">
-    <input type="radio" name="group">
-    <div class="item-content">
-      Workout City
-    </div>
-    <i class="radio-icon ion-checkmark"></i>
-  </label>
-  <label class="item item-radio">
-    <input type="radio" name="group">
-    <div class="item-content">
-      Digital First
-    </div>
-    <i class="radio-icon ion-checkmark"></i>
-  </label>
-  <label class="item item-radio">
-    <input type="radio" name="group">
-    <div class="item-content">
-      First Digital
-    </div>
-    <i class="radio-icon ion-checkmark"></i>
-  </label>
-  <label class="item item-radio">
-    <input type="radio" name="group">
-    <div class="item-content">
-      Country Gym
-    </div>
-    <i class="radio-icon ion-checkmark"></i>
-  </label>
-  <label class="item item-radio">
-    <input type="radio" name="group">
-    <div class="item-content">
-      Gym Country
-    </div>
-    <i class="radio-icon ion-checkmark"></i>
-  </label>
-
+</form>
 </div>
-
-        </ion-content>
-      </ion-popover-view>
+{{selected_company}}
+</ion-content>
+</ion-popover-view>

@@ -3,60 +3,45 @@
 
   angular
     .module('starter')
-.controller('BasicController', BasicController);
+    .controller('CustomerFeedController', CustomerFeedController);
 
-  BasicController.$inject = ['$scope','$state', 'NavigationService','$ionicPopover', 'DataService'];
+  CustomerFeedController.$inject = [
+                              '$scope',
+                              'NavigationService',
+                              'DataService',
+                              'SessionService'
+                            ];
 
-  function BasicController($scope, $state, NavigationService, $ionicPopover, DataService) {
+  function CustomerFeedController($scope, NavigationService, DataService, SessionService) {
+
     var vm = this;
     vm.goTo = goTo;
 
+    $scope.uid = SessionService.getJson('uid');
 
-    $ionicPopover.fromTemplateUrl('templates/company/select-popup.html', {
-      scope: $scope,
-    }).then(function(popover) {
-      $scope.popover = popover;
-    });
+    $scope.contacts = [];
 
-    $scope.companies = DataService.getCompanies(); 
-
-    alert(angular.toJson($scope.companies));
+    DataService.getCustomerFeed($scope.uid).then(function(response){
+      //get the contact info
+      angular.forEach(response,function(value,key){
+        var contact_id;
+        if(value.recipient_user_id == $scope.uid){
+          contact_id = value.from_user_id;
+        }else{
+          contact_id = value.recipient_user_id;
+        }
+        response[key].contact_id = contact_id;
+        DataService.getUser(contact_id).then(function(response){
+          $scope.contacts[contact_id] = response;
+        });
+      });
+      $scope.messages = response;
+    }); 
 
     function goTo(path) {
       NavigationService.setLocation(path);
     }
-
-   $scope.toUser = {
-      _id: '534b8e5aaa5e7afc1b23e69b',
-      pic: 'http://ionicframework.com/img/docs/venkman.jpg',
-      username: 'Joel Brewer'
-    }
-
-    // this could be on $rootScope rather than in $stateParams
-    $scope.user = {
-      _id: '534b8fb2aa5e7afc1b23e69c',
-      pic: 'http://ionicframework.com/img/docs/mcfly.jpg',
-      username: 'Cody Fedell'
-    };
-
-    $scope.input = {
-      message: localStorage['userMessage-' + $scope.toUser._id] || ''
-    };
-
-    $scope.messages = getMockMessages();
-
-    function getMockMessages() {
-      return [{"_id":"535d625f898df4e80e2a125e","text":"Gym Fed has changed the game for hybrid app development.","userId":"534b8fb2aa5e7afc1b23e69c","date":"2014-04-27T20:02:39.082Z","read":true,"readDate":"2014-12-01T06:27:37.944Z"},{"_id":"535f13ffee3b2a68112b9fc0","text":"I like Gym Fed better than ice cream!","userId":"534b8e5aaa5e7afc1b23e69b","date":"2014-04-29T02:52:47.706Z","read":true,"readDate":"2014-12-01T06:27:37.944Z"},{"_id":"546a5843fd4c5d581efa263a","text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","userId":"534b8fb2aa5e7afc1b23e69c","date":"2014-11-17T20:19:15.289Z","read":true,"readDate":"2014-12-01T06:27:38.328Z"},{"_id":"54764399ab43d1d4113abfd1","text":"Am I dreaming?","userId":"534b8e5aaa5e7afc1b23e69b","date":"2014-11-26T21:18:17.591Z","read":true,"readDate":"2014-12-01T06:27:38.337Z"},{"_id":"547643aeab43d1d4113abfd2","text":"Is this magic?","userId":"534b8fb2aa5e7afc1b23e69c","date":"2014-11-26T21:18:38.549Z","read":true,"readDate":"2014-12-01T06:27:38.338Z"},{"_id":"547815dbab43d1d4113abfef","text":"Gee wiz, this is something special.","userId":"534b8e5aaa5e7afc1b23e69b","date":"2014-11-28T06:27:40.001Z","read":true,"readDate":"2014-12-01T06:27:38.338Z"},{"_id":"54781c69ab43d1d4113abff0","text":"I think I like Gym Fed more than I like ice cream!","userId":"534b8fb2aa5e7afc1b23e69c","date":"2014-11-28T06:55:37.350Z","read":true,"readDate":"2014-12-01T06:27:38.338Z"},{"_id":"54781ca4ab43d1d4113abff1","text":"Yea, it's pretty sweet","userId":"534b8e5aaa5e7afc1b23e69b","date":"2014-11-28T06:56:36.472Z","read":true,"readDate":"2014-12-01T06:27:38.338Z"},{"_id":"5478df86ab43d1d4113abff4","text":"Wow, this is really something huh?","userId":"534b8fb2aa5e7afc1b23e69c","date":"2014-11-28T20:48:06.572Z","read":true,"readDate":"2014-12-01T06:27:38.339Z"},{"_id":"54781ca4ab43d1d4113abff1","text":"Create amazing apps - brewerdigital.com","userId":"534b8e5aaa5e7afc1b23e69b","date":"2014-11-29T06:56:36.472Z","read":true,"readDate":"2014-12-01T06:27:38.338Z"}];
-    }
-  
-
-
-
-
-
-
   }
-
 })();
 
 (function() {
@@ -64,7 +49,381 @@
 
   angular
     .module('starter')
-.controller('RegistrationController', RegistrationController);
+    .controller('CustomerProfileController', CustomerProfileController);
+
+  CustomerProfileController.$inject = [
+                              '$scope',
+                              'NavigationService',
+                              'DataService',
+                              'SessionService'
+                            ];
+
+  function CustomerProfileController($scope, NavigationService, DataService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.uid = SessionService.getJson('uid');
+
+    DataService.getUser($scope.uid).then(function(response){
+      $scope.user = response;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CustomerChatController', CustomerChatController);
+
+  CustomerChatController.$inject = [
+                              '$scope',
+                              'NavigationService',
+                              'DataService',
+                              'SessionService', 
+                              '$stateParams'
+                            ];
+
+  function CustomerChatController($scope, NavigationService, DataService, SessionService, $stateParams) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.contact_id = $stateParams.contact_id;
+
+    $scope.uid = SessionService.getJson('uid');
+
+    DataService.getUser($scope.uid).then(function(response){
+      $scope.current_user = response;
+    });
+
+    DataService.getUser($stateParams.contact_id).then(function(response){
+      $scope.user = response;
+    });
+
+    DataService.getMessages($stateParams.contact_id).then(function(response){
+      $scope.messages = response;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+
+    $scope.send_chat = function send_chat(chat) {
+      DataService.sendMessage(SessionService.getJson('uid'),$scope.contact_id,chat.content).then(function(response){
+           DataService.getMessages($stateParams.contact_id).then(function(response){
+              $scope.messages = response;
+           });
+      });
+      chat.content='';
+    };
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyTabsController', CompanyTabsController);
+  CompanyTabsController.$inject = [
+                              '$scope',
+                              '$ionicPopover', 
+                              'SessionService',
+                              'DataService',
+                              'NavigationService'
+                            ];
+  function CompanyTabsController($scope, $ionicPopover, SessionService, DataService, NavigationService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+    
+    $scope.NavigationService = NavigationService;
+
+    $scope.roles = SessionService.getJson('roles');
+
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    DataService.getCompanies().then(function(response){
+      $scope.companies = response;
+    }); 
+
+    //selector popup stuff
+    //
+    $ionicPopover.fromTemplateUrl('templates/company/select-popup.html', {
+      scope: $scope,
+    }).then(function(popover) {
+      $scope.popover = popover;
+    });
+
+    $scope.openPopover = function($event) {
+      $scope.popover.show($event);
+    };
+    $scope.closePopover = function() {
+      setTimeout($scope.popover.hide(),1000);
+    };
+    //Cleanup the popover when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.popover.remove();
+    });
+    // Execute action on hide popover
+    $scope.$on('popover.hidden', function() {
+      // Execute action
+    });
+    // Execute action on remove popover
+    $scope.$on('popover.removed', function() {
+      // Execute action
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyProfileController', CompanyProfileController);
+  CompanyProfileController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyProfileController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.NavigationService = NavigationService;
+    $scope.roles = SessionService.getJson('roles');
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyBulletinController', CompanyBulletinController);
+  CompanyBulletinController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyBulletinController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.NavigationService = NavigationService;
+    $scope.roles = SessionService.getJson('roles');
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyUserController', CompanyUserController);
+  CompanyUserController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyUserController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.NavigationService = NavigationService;
+    $scope.roles = SessionService.getJson('roles');
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyFeedController', CompanyFeedController);
+  CompanyFeedController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyFeedController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.NavigationService = NavigationService;
+    $scope.roles = SessionService.getJson('roles');
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyChatController', CompanyChatController);
+  CompanyChatController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyChatController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.NavigationService = NavigationService;
+    $scope.roles = SessionService.getJson('roles');
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyBulletinAddController', CompanyBulletinAddController);
+  CompanyBulletinAddController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyBulletinAddController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.NavigationService = NavigationService;
+    $scope.roles = SessionService.getJson('roles');
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyUserAddController', CompanyUserAddController);
+  CompanyUserAddController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyUserAddController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.NavigationService = NavigationService;
+    $scope.roles = SessionService.getJson('roles');
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('RegistrationController', RegistrationController);
 
   RegistrationController.$inject = ['Config','AuthenticationService', 'SessionService', '$state', 'jwtHelper'];
 
@@ -90,8 +449,6 @@
       AuthenticationService.login(vm.credentials)
         .then(function (response) {
           if (response.status == 200) {
-            alert(angular.toJson(SessionService.getJson('perms')));
-            //alert(angular.toJson(jwtHelper.decodeToken(response.data.jwt)));
             $state.go('customer');
           } else {
             alert("error logging in");

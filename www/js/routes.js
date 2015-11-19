@@ -7,7 +7,7 @@
 
   Routes.$inject = ['$stateProvider', '$urlRouterProvider'];
 
-  function Routes($stateProvider, $urlRouterProvider, DataService) {
+  function Routes($stateProvider, $urlRouterProvider) {
 
   $stateProvider
   .state('login', {
@@ -20,30 +20,30 @@
   .state('customer', {
     url: '/customer',
     templateUrl: 'templates/customer/feed.html',
-    controller: 'BasicController as vm'
+    controller: 'CustomerFeedController as vm'
   })
   .state('customer-profile', {
     url: '/customer/profile',
     templateUrl: 'templates/customer/profile.html',
-    controller: 'BasicController as vm'
+    controller: 'CustomerProfileController as vm'
   })
   .state('customer-chat', {
-    url: '/customer/chat',
+    url: '/customer/chat/:contact_id',
     templateUrl: 'templates/customer/chat.html',
-    controller: 'BasicController as vm'
+    controller: 'CustomerChatController as vm'
   })
     .state('tab', {
     url: '/company',
     abstract: true,
     templateUrl: 'templates/company/tabs.html',
-    controller: 'BasicController as vm'
+    controller: 'CompanyTabsController as vm'
   })                
   .state('tab.profile', {
     url: '/profile',
     views: {
       'tab-profile' : {
          templateUrl: 'templates/company/profile.html',
-         controller: 'BasicController as vm'
+         controller: 'CompanyProfileController as vm'
       }
     }
   })
@@ -52,7 +52,7 @@
     views: {
       'tab-bulletins' : {
          templateUrl: 'templates/company/bulletins.html',
-         controller: 'BasicController as vm'
+         controller: 'CompanyBulletinController as vm'
       }
     }
   })
@@ -61,7 +61,7 @@
     views: {
       'tab-users' : {
          templateUrl: 'templates/company/users.html',
-         controller: 'BasicController as vm'
+         controller: 'CompanyUserController as vm'
       }
     }
   })
@@ -70,24 +70,24 @@
     views: {
       'tab-feed' : {
         templateUrl: 'templates/company/feed.html',
-        controller: 'BasicController as vm'
+        controller: 'CompanyFeedController as vm'
       }
     }
   })
   .state('company-chat', {
     url: '/company/chat',
     templateUrl: 'templates/company/chat.html',
-    controller: 'BasicController as vm'
+    controller: 'CompanyChatController as vm'
   })
   .state('company-bulletin-add', {
     url: '/company/bulletin/add',
     templateUrl: 'templates/company/bulletin-add.html',
-    controller: 'BasicController as vm'
+    controller: 'CompanyBulletinAddController as vm'
   })
   .state('company-user-add', {
     url: '/company/user/add',
     templateUrl: 'templates/company/user-add.html',
-    controller: 'BasicController as vm'
+    controller: 'CompanyUserAddController as vm'
   })
 ;
 
@@ -96,5 +96,4 @@
   }
 
 })();
-
 
