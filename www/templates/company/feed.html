@@ -1,4 +1,4 @@
-<ion-view view-title="{{companies[(selected_company)].name}} Feed">
+<ion-view view-title="Feed {{companies[(selected_company)].name}}">
 <ion-content scroll="true"  on-swipe-right="vm.goTo('/customer')"> 
              <div ng-repeat="message in messages" class="message-wrapper"
                   on-hold="onMessageHold($event, $index, message)" ng-click="vm.goTo('/company/chat');">
