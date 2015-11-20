@@ -35,10 +35,11 @@
     function cacheSession(data) {
       SessionService.set('authenticated', true);
       SessionService.set('jwt', data.jwt);
-      var decoded = jwtHelper.decodeToken(data.jwt)
+      var decoded = jwtHelper.decodeToken(data.jwt);
       SessionService.setJson('uid', decoded['data']['userId']);
-      SessionService.setJson('roles', decoded['data']['roles']);
-      SessionService.setJson('companies', decoded['data']['companies']);
+      SessionService.setJson('role_admin', decoded['role_admin']);
+      SessionService.setJson('role_employee', decoded['role_employee']);
+      SessionService.setJson('role_customer', decoded['role_customer']);
       console.log('Session cached.');
       SessionService.set('auth_token', data.auth_token);
     }
@@ -63,6 +64,7 @@
         getCompanies : getCompanies,
         getCustomerFeed : getCustomerFeed,
         getMessages: getMessages,
+        getBulletins: getBulletins,
         getCompany : getCompany,
         getUser : getUser,
         sendMessage : sendMessage
@@ -85,9 +87,9 @@
 
     function getEmployees(cid){
 
-      return $http({method:'GET', url:API.url + '/company/'+cid+'/employees'})
-        .success(function(resulty) {
-            SessionService.setJson('employee_list',resulty.data);
+      return $http({method:'GET', url:API.url + '/employee/'+cid})
+        .then(function(resulty) {
+            SessionService.setJson('employees-'+cid,resulty.data);
 //alert(angular.toJson(resulty.data));
             return resulty.data;
         });
@@ -95,8 +97,8 @@
 
     function getCustomers(cid){
 
-      return $http({method:'GET', url:API.url + '/company/'+cid+'/customers'})
-        .success(function(resulty) {
+      return $http({method:'GET', url:API.url + '/customer/'+cid})
+        .then(function(resulty) {
             SessionService.setJson('customer_list',resulty.data);
 //alert(angular.toJson(resulty.data));
             return resulty.data;
@@ -128,6 +130,14 @@
       return $http({method:'GET', url:API.url + '/message/'+uid})
         .then(function(resulty) {
             SessionService.setJson('user_messages-'+uid, resulty.data);
+            return resulty.data;
+        });
+    }
+
+    function getBulletins(cid) {
+      return $http({method:'GET', url:API.url + '/bulletin/'+cid})
+        .then(function(resulty) {
+            SessionService.setJson('bulletins-'+cid, resulty.data);
             return resulty.data;
         });
     }
@@ -170,7 +180,6 @@
 
     var service = {};
     service.selected_company = '1';
-    service.roles = '{}';
     service.setLocation = setLocation;
     return service;
   }
