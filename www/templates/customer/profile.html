@@ -24,13 +24,13 @@
   </label>
   <label class="item item-input ">
     <span class="input-label">Company</span>
-    <input type="text">
+    <input type="text" ng-model="user.company_name">
   </label>
   <label class="item item-input ">
     <span class="input-label">Position</span>
-    <input type="text">
+    <input type="text" ng-model="user.position">
   </label>
-<button class="button button-block button-positive">
+<button class="button button-block button-positive" ng-click="update_profile(user);">
   Update
 </button>
 

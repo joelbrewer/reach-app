@@ -67,7 +67,8 @@
         getBulletins: getBulletins,
         getCompany : getCompany,
         getUser : getUser,
-        sendMessage : sendMessage
+        sendMessage : sendMessage,
+        updateUser : updateUser
     };
 
     function getCurrentUserId(){
@@ -158,6 +159,20 @@
         method: 'POST', 
         url: API.url + '/message', 
         data: "sender_uid="+sender_uid+"&recipient_uid="+recipient_uid+"&message_content="+message_content, 
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+         
+      }).then(function(data) { 
+      });  
+
+    }
+
+    function updateUser(user) {
+
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      return $http({ 
+        method: 'POST', 
+        url: API.url + '/user', 
+        data: "id="+user.id+"&first_name="+user.first_name+"&last_name="+user.last_name+"&email="+user.email+"&company_name="+user.company_name+"&position="+user.position, 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
          
       }).then(function(data) { 

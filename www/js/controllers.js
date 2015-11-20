@@ -70,6 +70,14 @@
       $scope.user = response;
     });
 
+    $scope.update_profile = function update_profile(user) {
+      DataService.updateUser(user).then(function(response){
+           DataService.getUser($scope.uid).then(function(response){
+              $scope.user = response;
+           });
+      });
+    };
+
     function goTo(path) {
       NavigationService.setLocation(path);
     }
