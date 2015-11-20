@@ -7,8 +7,8 @@
 <ion-content scroll="true"> 
 
 <div class="list" style="padding:15px;">
-    <textarea rows="10" style="width:99%; padding:4px;" placeholder="Type message here..."></textarea>
-<button class="button button-block button-positive">
+    <textarea rows="10" style="width:99%; padding:4px;" placeholder="Type message here..." ng-model="bulletin.message_content"></textarea>
+<button class="button button-block button-positive" ng-click="send_bulletin(bulletin);">
 Send
 </button>
 

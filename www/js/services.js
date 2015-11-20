@@ -68,6 +68,7 @@
         getCompany : getCompany,
         getUser : getUser,
         sendMessage : sendMessage,
+        sendBulletin : sendBulletin,
         updateUser : updateUser
     };
 
@@ -159,6 +160,20 @@
         method: 'POST', 
         url: API.url + '/message', 
         data: "sender_uid="+sender_uid+"&recipient_uid="+recipient_uid+"&message_content="+message_content, 
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+         
+      }).then(function(data) { 
+      });  
+
+    }
+
+    function sendBulletin(bulletin) {
+
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      return $http({ 
+        method: 'POST', 
+        url: API.url + '/bulletin', 
+        data: "sender_uid="+bulletin.sender_uid+"&company_id="+bulletin.company_id+"&message_content="+bulletin.message_content, 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
          
       }).then(function(data) { 

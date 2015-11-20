@@ -432,6 +432,7 @@
     vm.goTo = goTo;
 
     $scope.NavigationService = NavigationService;
+    $scope.uid = SessionService.getJson('uid');
     $scope.role_admin = SessionService.getJson('role_admin');
     $scope.role_employee = SessionService.getJson('role_employee');
     $scope.role_customer = SessionService.getJson('role_customer');
@@ -443,6 +444,20 @@
             $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
             $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
     });
+
+    $scope.send_bulletin = function send_bulletin(bulletin) {
+      bulletin.company_id = $scope.selected_company;
+      bulletin.sender_uid = $scope.uid; 
+      DataService.sendBulletin(bulletin).then(function(response){
+/*           DataService.getMessages($stateParams.contact_id).then(function(response){
+              $scope.messages = response;
+           });
+*/
+      });
+      bulletin.message_content='';
+    };
+
+
 
     function goTo(path) {
       NavigationService.setLocation(path);
