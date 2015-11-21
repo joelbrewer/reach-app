@@ -7,12 +7,13 @@
 
   CustomerFeedController.$inject = [
                               '$scope',
+                              '$pusher',
                               'NavigationService',
                               'DataService',
                               'SessionService'
                             ];
 
-  function CustomerFeedController($scope, NavigationService, DataService, SessionService) {
+  function CustomerFeedController($scope, $pusher, NavigationService, DataService, SessionService) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -42,6 +43,29 @@
       });
       $scope.messages = response;
     }); 
+
+    var pusher = $pusher(pusher_client);
+    var channel = pusher.subscribe('my_channel'+$scope.uid);
+    channel.bind('my_event', function(data) {
+      DataService.getCustomerFeed($scope.uid).then(function(response){
+        //get the contact info
+        angular.forEach(response,function(value,key){
+          var contact_id;
+          //get the user_id that isn't us.
+          if(value.recipient_user_id == $scope.uid){
+            contact_id = value.from_user_id;
+          }else{
+            contact_id = value.recipient_user_id;
+          }
+          response[key].contact_id = contact_id;
+          DataService.getUser(contact_id).then(function(response){
+            $scope.contacts[contact_id] = response;
+          });
+        });
+        $scope.messages = response;
+      }); 
+    });
+
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -101,16 +125,17 @@
                               'DataService',
                               'SessionService', 
                               '$stateParams',
+                              '$pusher',
                               '$ionicScrollDelegate'
                             ];
 
-  function CustomerChatController($scope, NavigationService, DataService, SessionService, $stateParams, $ionicScrollDelegate) {
+  function CustomerChatController($scope, NavigationService, DataService, SessionService, $stateParams, $pusher, $ionicScrollDelegate) {
 
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.contact_id = $stateParams.contact_id;
 
+    $scope.contact_id = $stateParams.contact_id;
     $scope.uid = SessionService.getJson('uid');
 
     DataService.getUser($scope.uid).then(function(response){
@@ -126,9 +151,14 @@
       $ionicScrollDelegate.scrollBottom();
     });
 
-    function goTo(path) {
-      NavigationService.setLocation(path);
-    }
+    var pusher = $pusher(pusher_client);
+    var channel = pusher.subscribe('my_channel'+$scope.uid);
+    channel.bind('my_event', function(data) {
+      DataService.getMessages($stateParams.contact_id).then(function(response){
+        $scope.messages = response;
+        $ionicScrollDelegate.scrollBottom();
+      });
+    });
 
     $scope.send_chat = function send_chat(chat) {
       DataService.sendMessage(SessionService.getJson('uid'),$scope.contact_id,chat.content).then(function(response){
@@ -139,6 +169,11 @@
       });
       chat.content='';
     };
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+
   }
 })();
 

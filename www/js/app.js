@@ -1,15 +1,16 @@
-// Pusher.log = function(message) {
-//       if (window.console && window.console.log) {
-//         window.console.log(message);
-//       }
-//     };
-// 
-// //window.pusher_client = new Pusher('95129dfbfbc16ec4a811');
-// var pusher_client = new Pusher('95129dfbfbc16ec4a811',{
-//     authTransport: 'jsonp',
-//     authEndpoint: 'http://192.168.1.16:5000/pusher/auth'
-//   });
-// 
+ Pusher.log = function(message) {
+       if (window.console && window.console.log) {
+         window.console.log(message);
+       }
+     };
+ 
+ //window.pusher_client = new Pusher('95129dfbfbc16ec4a811');
+ var pusher_client = new Pusher('95129dfbfbc16ec4a811',{
+     authTransport: 'jsonp',
+     authEndpoint: 'http://52.27.2.199/reach/pusher/auth'
+     //authEndpoint: 'http://192.168.1.2:5000/pusher/auth'
+   });
+ 
 var ReachApp = angular.module('starter', ['ionic','pusher-angular', 'angular-jwt'])
 //var ReachApp = angular.module('starter', ['ionic','pusher-angular', 'angularMoment'])
 
