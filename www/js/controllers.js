@@ -100,10 +100,11 @@
                               'NavigationService',
                               'DataService',
                               'SessionService', 
-                              '$stateParams'
+                              '$stateParams',
+                              '$ionicScrollDelegate'
                             ];
 
-  function CustomerChatController($scope, NavigationService, DataService, SessionService, $stateParams) {
+  function CustomerChatController($scope, NavigationService, DataService, SessionService, $stateParams, $ionicScrollDelegate) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -122,6 +123,7 @@
 
     DataService.getMessages($stateParams.contact_id).then(function(response){
       $scope.messages = response;
+      $ionicScrollDelegate.scrollBottom();
     });
 
     function goTo(path) {
@@ -132,6 +134,7 @@
       DataService.sendMessage(SessionService.getJson('uid'),$scope.contact_id,chat.content).then(function(response){
            DataService.getMessages($stateParams.contact_id).then(function(response){
               $scope.messages = response;
+              $ionicScrollDelegate.scrollBottom(true);
            });
       });
       chat.content='';
