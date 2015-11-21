@@ -19,6 +19,10 @@
 
     $scope.uid = SessionService.getJson('uid');
 
+    DataService.getUser($scope.uid).then(function(response){
+      $scope.current_user = response;
+    });
+
     $scope.contacts = [];
 
     DataService.getCustomerFeed($scope.uid).then(function(response){
