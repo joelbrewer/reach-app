@@ -13,7 +13,7 @@
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
                                   class="bold">{{contacts[message.contact_id].first_name}} {{contacts[message.contact_id].last_name}}</span>,
-                              <span am-time-ago="message.date">{{message.timestamp_queued}}</span>
+                              <span am-time-ago="message.date">{{message.timestamp_queued * 1000 |date:"medium"}}</span>
                           </div>
                           <div ng-if="message.recipient_user_id === message.contact_id" class="message" autolinker>You: {{message.message_content}} 
                           </div>

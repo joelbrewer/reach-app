@@ -7,7 +7,7 @@
   <div class="item item-divider">
     <h2>
     <i class="ion-ios-star"></i>
-    {{bulletin.timestamp_queued}}
+    {{bulletin.timestamp_queued * 1000 |date:"medium"}}
     </h2> 
   </div>
   <div class="item item-text-wrap">

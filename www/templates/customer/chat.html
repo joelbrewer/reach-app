@@ -12,7 +12,7 @@
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
                                   class="bold">You</span>
-                              <span>{{message.timestamp_queued}}</span>
+                              <span>{{message.timestamp_queued * 1000 |date:"medium"}}</span>
                           </div>
                           <div class="message" ng-bind-html="message.message_content" autolinker>
                           </div>
@@ -25,7 +25,7 @@
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
                                   class="bold">{{user.first_name}} {{user.last_name}}</span> 
-                              <span >{{message.timestamp_queued}}</span>
+                              <span >{{message.timestamp_queued * 1000 |date:"medium"}}</span>
                           </div>
                           <div class="message" ng-bind-html="message.message_content " autolinker>
                           </div>
