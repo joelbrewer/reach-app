@@ -89,6 +89,11 @@
     templateUrl: 'templates/company/user-add.html',
     controller: 'CompanyUserAddController as vm'
   })
+  .state('company-perms', {
+    url: '/company/perms/:contact_id/:company_id',
+    templateUrl: 'templates/company/perms.html',
+    controller: 'CompanyPermsController as vm'
+  })
 ;
 
   $urlRouterProvider.otherwise('/login');

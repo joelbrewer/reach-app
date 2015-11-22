@@ -208,6 +208,7 @@
             $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
             $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
             $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
+            $scope.role = ($scope.is_admin) ? "Admin" : ($scope.is_employee) ? "Employee" : "Customer";
     });
 
     DataService.getCompanies().then(function(response){
@@ -372,6 +373,43 @@
             }else{
             	  $scope.customers = {};
             }
+    });
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('CompanyPermsController', CompanyPermsController);
+  CompanyPermsController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyPermsController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    $scope.NavigationService = NavigationService;
+    $scope.role_admin = SessionService.getJson('role_admin');
+    $scope.role_employee = SessionService.getJson('role_employee');
+    $scope.role_customer = SessionService.getJson('role_customer');
+    $scope.selected_company = NavigationService.selected_company;
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+            $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
+            $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
+            $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
     });
 
     function goTo(path) {

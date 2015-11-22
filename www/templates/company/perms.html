@@ -1,0 +1,41 @@
+<ion-view view-title="User perms">
+<ion-nav-bar  class="bar-balanced">
+</ion-nav-bar>
+<ion-nav-buttons side="left">
+<button class="button icon ion-arrow-left-c button-clear" ng-click="vm.goTo('/company/users')">Back</button>
+</ion-nav-buttons>
+<ion-content scroll="true"> 
+
+  <div class="item item-divider">
+   <center><h2>Role</h2> </center>
+  </div>
+  <label class="item item-radio ">
+    <input type="radio" name="group"  checked="checked">
+    <div class="item-content">
+     Customer 
+    </div>
+    <i class="radio-icon ion-checkmark"></i>
+  </label>
+  <label class="item item-radio">
+    <input type="radio" name="group">
+    <div class="item-content">
+      Employee
+    </div>
+    <i class="radio-icon ion-checkmark"></i>
+  </label>
+  <label class="item item-radio">
+    <input type="radio" name="group">
+    <div class="item-content">
+      Company Administrator
+    </div>
+    <i class="radio-icon ion-checkmark"></i>
+  </label>
+<button class="button button-block button-positive">
+Update
+</button>
+
+</div>
+
+
+</ion-content>
+</ion-view>

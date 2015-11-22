@@ -1,4 +1,4 @@
-<ion-view view-title="Feed {{companies[(selected_company)].name}}">
+<ion-view view-title="Feed {{companies[(selected_company)].name}} ({{role}})">
 <ion-content scroll="true"  on-swipe-right="vm.goTo('/customer')"> 
                     
              <div ng-repeat="message in messages" class="message-wrapper">
