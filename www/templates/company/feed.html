@@ -1,26 +1,22 @@
 <ion-view view-title="Feed {{companies[(selected_company)].name}}">
 <ion-content scroll="true"  on-swipe-right="vm.goTo('/customer')"> 
-             <div ng-repeat="message in messages" class="message-wrapper"
-                  on-hold="onMessageHold($event, $index, message)" ng-click="vm.goTo('/company/chat');">
+                    
+             <div ng-repeat="message in messages" class="message-wrapper">
       
-                  <div ng-if="user._id !== message.userId">
                       
-                    <img ng-click="viewProfile(message)" class="profile-pic left" 
-                          ng-src="{{toUser.pic}}" onerror="onProfilePicError(this)" />
-      
-                      <div class="chat-bubble left">
-      
-                          <div class="message" ng-bind-html="message.text" autolinker>
-                          </div>
-      
+                    <img class="profile-pic left" ng-src="img/default-avatar.png"/>
+                      <div class="chat-bubble left"  ng-click="vm.goTo('/company/chat/{{message.contact_id}}/{{message.company_id}}');">
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
-                                  class="bold">{{toUser.username}}</span>,
-                              <span am-time-ago="message.date"></span>
+                                  class="bold">{{contacts[message.contact_id].first_name}} {{contacts[message.contact_id].last_name}}</span>,
+                              <span am-time-ago="message.date">{{message.timestamp_queued * 1000 |date:"medium"}}</span>
+                          </div>
+                          <div ng-if="message.recipient_user_id === message.contact_id" class="message" autolinker>You: {{message.message_content}} 
+                          </div>
+                          <div ng-if="message.recipient_user_id === uid" class="message" ng-bind-html="message.message_content" autolinker>
                           </div>
       
                       </div>
-                  </div>
       
                     
       

@@ -28,7 +28,7 @@
     controller: 'CustomerProfileController as vm'
   })
   .state('customer-chat', {
-    url: '/customer/chat/:contact_id',
+    url: '/customer/chat/:contact_id/:company_id',
     templateUrl: 'templates/customer/chat.html',
     controller: 'CustomerChatController as vm'
   })
@@ -75,7 +75,7 @@
     }
   })
   .state('company-chat', {
-    url: '/company/chat',
+    url: '/company/chat/:contact_id/:company_id',
     templateUrl: 'templates/company/chat.html',
     controller: 'CompanyChatController as vm'
   })

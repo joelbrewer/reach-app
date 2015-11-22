@@ -26,7 +26,7 @@
 
     $scope.contacts = [];
 
-    DataService.getCustomerFeed($scope.uid).then(function(response){
+    DataService.getCustomerFeed().then(function(response){
       //get the contact info
       angular.forEach(response,function(value,key){
         var contact_id;
@@ -47,7 +47,7 @@
     var pusher = $pusher(pusher_client);
     var channel = pusher.subscribe('my_channel'+$scope.uid);
     channel.bind('my_event', function(data) {
-      DataService.getCustomerFeed($scope.uid).then(function(response){
+      DataService.getCustomerFeed().then(function(response){
         //get the contact info
         angular.forEach(response,function(value,key){
           var contact_id;
@@ -134,8 +134,8 @@
     var vm = this;
     vm.goTo = goTo;
 
-
     $scope.contact_id = $stateParams.contact_id;
+    $scope.company_id = $stateParams.company_id;
     $scope.uid = SessionService.getJson('uid');
 
     DataService.getUser($scope.uid).then(function(response){
@@ -146,7 +146,7 @@
       $scope.user = response;
     });
 
-    DataService.getMessages($stateParams.contact_id).then(function(response){
+    DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
       $scope.messages = response;
       $ionicScrollDelegate.scrollBottom();
     });
@@ -154,15 +154,15 @@
     var pusher = $pusher(pusher_client);
     var channel = pusher.subscribe('my_channel'+$scope.uid);
     channel.bind('my_event', function(data) {
-      DataService.getMessages($stateParams.contact_id).then(function(response){
+      DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
         $scope.messages = response;
         $ionicScrollDelegate.scrollBottom();
       });
     });
 
     $scope.send_chat = function send_chat(chat) {
-      DataService.sendMessage(SessionService.getJson('uid'),$scope.contact_id,chat.content).then(function(response){
-           DataService.getMessages($stateParams.contact_id).then(function(response){
+      DataService.sendMessage(SessionService.getJson('uid'),$scope.company_id,$scope.contact_id,chat.content).then(function(response){
+           DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
               $scope.messages = response;
               $ionicScrollDelegate.scrollBottom(true);
            });
@@ -398,17 +398,56 @@
     var vm = this;
     vm.goTo = goTo;
 
+    $scope.uid = SessionService.getJson('uid');
     $scope.NavigationService = NavigationService;
     $scope.role_admin = SessionService.getJson('role_admin');
     $scope.role_employee = SessionService.getJson('role_employee');
     $scope.role_customer = SessionService.getJson('role_customer');
     $scope.selected_company = NavigationService.selected_company;
 
+    $scope.contacts = [];
+
+    DataService.getCompanyFeed($scope.selected_company).then(function(response){
+      //get the contact info
+      angular.forEach(response,function(value,key){
+        var contact_id;
+        //get the user_id that isn't us.
+        if(value.recipient_user_id == $scope.uid){
+          contact_id = value.from_user_id;
+        }else{
+          contact_id = value.recipient_user_id;
+        }
+        response[key].contact_id = contact_id;
+        DataService.getUser(contact_id).then(function(response){
+          $scope.contacts[contact_id] = response;
+        });
+      });
+      $scope.messages = response;
+    }); 
+
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
             $scope.selected_company = NavigationService.selected_company;
             $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
             $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
             $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
+
+      DataService.getCompanyFeed($scope.selected_company).then(function(response){
+        //get the contact info
+        angular.forEach(response,function(value,key){
+          var contact_id;
+          //get the user_id that isn't us.
+          if(value.recipient_user_id == $scope.uid){
+            contact_id = value.from_user_id;
+          }else{
+            contact_id = value.recipient_user_id;
+          }
+          response[key].contact_id = contact_id;
+          DataService.getUser(contact_id).then(function(response){
+            $scope.contacts[contact_id] = response;
+          });
+        });
+        $scope.messages = response;
+      }); 
     });
 
     function goTo(path) {
@@ -426,21 +465,32 @@
     .controller('CompanyChatController', CompanyChatController);
   CompanyChatController.$inject = [
                               '$scope',
+                              '$stateParams',
+                              '$pusher',
+                              '$ionicScrollDelegate',
                               'DataService',
                               'NavigationService',
 			      'SessionService'
                             ];
 
-  function CompanyChatController($scope, DataService, NavigationService, SessionService) {
+  function CompanyChatController($scope, $stateParams, $pusher, $ionicScrollDelegate, DataService, NavigationService, SessionService) {
 
     var vm = this;
     vm.goTo = goTo;
 
+    $scope.uid = SessionService.getJson('uid');
+    $scope.contact_id = $stateParams.contact_id;
+    $scope.company_id = $stateParams.company_id;
     $scope.NavigationService = NavigationService;
     $scope.role_admin = SessionService.getJson('role_admin');
     $scope.role_employee = SessionService.getJson('role_employee');
     $scope.role_customer = SessionService.getJson('role_customer');
     $scope.selected_company = NavigationService.selected_company;
+
+    DataService.getUser($stateParams.contact_id).then(function(response){
+      $scope.user = response;
+    });
+
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
             $scope.selected_company = NavigationService.selected_company;
@@ -448,6 +498,31 @@
             $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
             $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
     });
+
+    DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
+      $scope.messages = response;
+      $ionicScrollDelegate.scrollBottom();
+    });
+
+    var pusher = $pusher(pusher_client);
+    var channel = pusher.subscribe('my_channel'+$scope.uid);
+    channel.bind('my_event', function(data) {
+      DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
+        $scope.messages = response;
+        $ionicScrollDelegate.scrollBottom();
+      });
+    });
+
+    $scope.send_chat = function send_chat(chat) {
+      DataService.sendMessage(SessionService.getJson('uid'),$scope.company_id,$scope.contact_id,chat.content).then(function(response){
+           DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
+              $scope.messages = response;
+              $ionicScrollDelegate.scrollBottom(true);
+           });
+      });
+      chat.content='';
+    };
+
 
     function goTo(path) {
       NavigationService.setLocation(path);

@@ -63,6 +63,7 @@
         getCustomers : getCustomers,
         getCompanies : getCompanies,
         getCustomerFeed : getCustomerFeed,
+        getCompanyFeed : getCompanyFeed,
         getMessages: getMessages,
         getBulletins: getBulletins,
         getCompany : getCompany,
@@ -128,10 +129,10 @@
         });
     }
 
-    function getMessages(uid) {
-      return $http({method:'GET', url:API.url + '/message/'+uid})
+    function getMessages(uid,cid) {
+      return $http({method:'GET', url:API.url + '/message/'+cid+'/'+uid})
         .then(function(resulty) {
-            SessionService.setJson('user_messages-'+uid, resulty.data);
+            SessionService.setJson('user_messages-'+cid+'-'+uid, resulty.data);
             return resulty.data;
         });
     }
@@ -145,21 +146,30 @@
     }
 
 
-    function getCustomerFeed(uid) {
-      return $http({method:'GET', url:API.url + '/feed/'+uid})
+    function getCustomerFeed() {
+      return $http({method:'GET', url:API.url + '/customer/feed'})
         .then(function(resulty) {
             SessionService.setJson('customer_feed',resulty.data);
             return resulty.data;
         });
     }
 
-    function sendMessage(sender_uid, recipient_uid, message_content) {
+    function getCompanyFeed(cid) {
+      return $http({method:'GET', url:API.url + '/company/feed/'+cid})
+        .then(function(resulty) {
+            SessionService.setJson('company_feed-'+cid,resulty.data);
+            return resulty.data;
+        });
+    }
+
+
+    function sendMessage(sender_uid, company_id, recipient_uid, message_content) {
 
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
       return $http({ 
         method: 'POST', 
         url: API.url + '/message', 
-        data: "sender_uid="+sender_uid+"&recipient_uid="+recipient_uid+"&message_content="+message_content, 
+        data: "sender_uid="+sender_uid+"&company_id="+company_id+"&recipient_uid="+recipient_uid+"&message_content="+message_content, 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
          
       }).then(function(data) { 

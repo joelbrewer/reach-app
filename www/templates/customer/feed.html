@@ -9,9 +9,9 @@
       
                       
                     <img class="profile-pic left" ng-src="img/default-avatar.png"/>
-                      <div class="chat-bubble left"  ng-click="vm.goTo('/customer/chat/{{message.contact_id}}');">
+                      <div class="chat-bubble left"  ng-click="vm.goTo('/customer/chat/{{message.contact_id}}/{{message.company_id}}');">
                           <div class="message-detail">
-                              <span ng-click="viewProfile(message)" 
+                              <span 
                                   class="bold">{{contacts[message.contact_id].first_name}} {{contacts[message.contact_id].last_name}}</span>,
                               <span am-time-ago="message.date">{{message.timestamp_queued * 1000 |date:"medium"}}</span>
                           </div>
