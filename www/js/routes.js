@@ -94,6 +94,11 @@
     templateUrl: 'templates/company/perms.html',
     controller: 'CompanyPermsController as vm'
   })
+  .state('company-profile-edit', {
+    url: '/company/profile/edit',
+    templateUrl: 'templates/company/profile-edit.html',
+    controller: 'CompanyProfileEditController as vm'
+  })
 ;
 
   $urlRouterProvider.otherwise('/login');

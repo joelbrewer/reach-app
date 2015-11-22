@@ -1,6 +1,7 @@
-
 <ion-view view-title="Home {{companies[(selected_company)].name}} ({{role}})">
-
+<ion-nav-buttons side="left" >
+<button  ng-if="is_admin" class="button icon ion-edit button-clear" ng-click="vm.goTo('/company/profile/edit')"></button>
+</ion-nav-buttons>
 <ion-content  scroll="true" on-swipe-right="vm.goTo('/customer')"> 
   <!-- Main content, usually <ion-nav-view> -->
 <div class="list card">

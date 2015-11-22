@@ -1,0 +1,29 @@
+<ion-view view-title="Edit {{companies[(selected_company)].name}}">
+<ion-nav-bar  class="bar-balanced">
+</ion-nav-bar>
+<ion-nav-buttons side="left">
+<button class="button icon ion-arrow-left-c button-clear" ng-click="vm.goTo('/company/profile')">Back</button>
+</ion-nav-buttons>
+<ion-content scroll="true"> 
+<div class="list" style="padding:10px;">
+  <div class="item item-image">
+    <img src="img/gymfed.jpeg">
+  </div>
+  <label class="item item-input ">
+    <span class="input-label">Company Name</span>
+    <input type="text" ng-model="company.name">
+  </label>
+  <label class="item item-input ">
+    <span class="input-label">Description</span>
+    <input type="text" ng-model="company.description">
+  </label>
+  <label class="item item-input ">
+    <span class="input-label">Long Desc</span>
+    <input type="text" ng-model="company.long_desc">
+  </label>
+<button class="button button-block button-positive" ng-click="update_profile(company);">
+  Update
+</button>
+</div>
+</ion-content>
+</ion-view>

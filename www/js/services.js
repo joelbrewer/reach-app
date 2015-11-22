@@ -72,6 +72,7 @@
         sendMessage : sendMessage,
         sendBulletin : sendBulletin,
         updatePerms : updatePerms,
+        updateCompany : updateCompany,
         updateUser : updateUser
     };
 
@@ -209,6 +210,20 @@
         method: 'POST', 
         url: API.url + '/user', 
         data: "id="+user.id+"&first_name="+user.first_name+"&last_name="+user.last_name+"&email="+user.email+"&company_name="+user.company_name+"&position="+user.position, 
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+         
+      }).then(function(data) { 
+      });  
+
+    }
+
+    function updateCompany(company) {
+
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      return $http({ 
+        method: 'POST', 
+        url: API.url + '/company', 
+        data: "id="+company.id+"&name="+company.name+"&description="+company.description+"&long_desc="+company.long_desc, 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
          
       }).then(function(data) { 
