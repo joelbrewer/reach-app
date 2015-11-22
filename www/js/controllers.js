@@ -426,12 +426,13 @@
     .controller('CompanyFeedController', CompanyFeedController);
   CompanyFeedController.$inject = [
                               '$scope',
+                              '$pusher',
                               'DataService',
                               'NavigationService',
 			      'SessionService'
                             ];
 
-  function CompanyFeedController($scope, DataService, NavigationService, SessionService) {
+  function CompanyFeedController($scope, $pusher, DataService, NavigationService, SessionService) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -487,6 +488,32 @@
         $scope.messages = response;
       }); 
     });
+
+    var pusher = $pusher(pusher_client);
+    var channel = pusher.subscribe('my_channel'+$scope.uid);
+    channel.bind('my_event', function(data) {
+
+        DataService.getCompanyFeed($scope.selected_company).then(function(response){
+          //get the contact info
+          angular.forEach(response,function(value,key){
+            var contact_id;
+            //get the user_id that isn't us.
+            if(value.recipient_user_id == $scope.uid){
+              contact_id = value.from_user_id;
+            }else{
+              contact_id = value.recipient_user_id;
+            }
+            response[key].contact_id = contact_id;
+            DataService.getUser(contact_id).then(function(response){
+              $scope.contacts[contact_id] = response;
+            });
+          });
+          $scope.messages = response;
+        }); 
+    });
+
+
+
 
     function goTo(path) {
       NavigationService.setLocation(path);
