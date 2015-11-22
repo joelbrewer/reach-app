@@ -11,8 +11,8 @@
     <img  src="img/default-avatar.png">
     <h2>{{employee.first_name}} {{employee.last_name}}</h2><p>Role</p>
     <div class="buttons">
-      <button ng-if="is_admin" class="button button-light ion-edit" ng-click="vm.goTo('company/perms/{{customer.id}}/{{selected_company}}');"></button>
-      <button class="button button-light" ng-click="vm.goTo('company/chat/{{customer.id}}/{{selected_company}}');"><i class="icon  ion-chatbox"></i></button>
+      <button ng-if="is_admin" class="button button-light ion-edit" ng-click="vm.goTo('company/perms/{{employee.id}}/{{selected_company}}');"></button>
+      <button class="button button-light" ng-click="vm.goTo('company/chat/{{employee.id}}/{{selected_company}}');"><i class="icon  ion-chatbox"></i></button>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-<ion-view view-title="User perms">
+<ion-view view-title="Perms {{user.first_name}} {{user.last_name}}">
 <ion-nav-bar  class="bar-balanced">
 </ion-nav-bar>
 <ion-nav-buttons side="left">
@@ -10,27 +10,27 @@
    <center><h2>Role</h2> </center>
   </div>
   <label class="item item-radio ">
-    <input type="radio" name="group"  checked="checked">
+    <input type="radio" name="group" value="customer" ng-model="perms.role">
     <div class="item-content">
      Customer 
     </div>
     <i class="radio-icon ion-checkmark"></i>
   </label>
   <label class="item item-radio">
-    <input type="radio" name="group">
+    <input type="radio" name="group" value="employee" ng-model="perms.role">
     <div class="item-content">
       Employee
     </div>
     <i class="radio-icon ion-checkmark"></i>
   </label>
   <label class="item item-radio">
-    <input type="radio" name="group">
+    <input type="radio" name="group" value="admin" ng-model="perms.role">
     <div class="item-content">
-      Company Administrator
+      Admin
     </div>
     <i class="radio-icon ion-checkmark"></i>
   </label>
-<button class="button button-block button-positive">
+<button class="button button-block button-positive" ng-click="update_perms(perms);">
 Update
 </button>
 

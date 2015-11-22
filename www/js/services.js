@@ -68,8 +68,10 @@
         getBulletins: getBulletins,
         getCompany : getCompany,
         getUser : getUser,
+        getPerms : getPerms,
         sendMessage : sendMessage,
         sendBulletin : sendBulletin,
+        updatePerms : updatePerms,
         updateUser : updateUser
     };
 
@@ -82,6 +84,15 @@
     function getUser(uid){
 
       return $http({method:'GET', url:API.url + '/user/'+uid})
+        .then(function(resulty) {
+//alert(angular.toJson(resulty.data));
+            return resulty.data;
+        });
+    }
+
+    function getPerms(uid,cid){
+
+      return $http({method:'GET', url:API.url + '/perm/'+uid+'/'+cid})
         .then(function(resulty) {
 //alert(angular.toJson(resulty.data));
             return resulty.data;
@@ -198,6 +209,20 @@
         method: 'POST', 
         url: API.url + '/user', 
         data: "id="+user.id+"&first_name="+user.first_name+"&last_name="+user.last_name+"&email="+user.email+"&company_name="+user.company_name+"&position="+user.position, 
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+         
+      }).then(function(data) { 
+      });  
+
+    }
+
+    function updatePerms(perm) {
+
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      return $http({ 
+        method: 'POST', 
+        url: API.url + '/perm', 
+        data: "id="+perm.id+"&user_id="+perm.user_id+"&company_id="+perm.company_id+"&role="+perm.role, 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
          
       }).then(function(data) { 

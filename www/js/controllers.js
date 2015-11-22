@@ -389,12 +389,13 @@
     .controller('CompanyPermsController', CompanyPermsController);
   CompanyPermsController.$inject = [
                               '$scope',
+                              '$stateParams',
                               'DataService',
                               'NavigationService',
 			      'SessionService'
                             ];
 
-  function CompanyPermsController($scope, DataService, NavigationService, SessionService) {
+  function CompanyPermsController($scope, $stateParams, DataService, NavigationService, SessionService) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -403,13 +404,21 @@
     $scope.role_admin = SessionService.getJson('role_admin');
     $scope.role_employee = SessionService.getJson('role_employee');
     $scope.role_customer = SessionService.getJson('role_customer');
+    $scope.role = ($scope.is_admin) ? "Admin" : ($scope.is_employee) ? "Employee" : "Customer";
     $scope.selected_company = NavigationService.selected_company;
 
-    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
-            $scope.selected_company = NavigationService.selected_company;
-            $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
-            $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
-            $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
+    DataService.getUser($stateParams.contact_id).then(function(response){
+      $scope.user = response;
+      DataService.getPerms($stateParams.contact_id,$scope.selected_company).then(function(response){
+        $scope.perms = response[0]; 
+      });
+    });
+
+    $scope.update_perms = (function update_perms(perms){
+      DataService.updatePerms(perms).then(function(response){
+        alert('permissions updated');
+        goTo('/company/users');
+      });
     });
 
     function goTo(path) {
