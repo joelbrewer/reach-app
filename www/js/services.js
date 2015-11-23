@@ -73,7 +73,8 @@
         sendBulletin : sendBulletin,
         updatePerms : updatePerms,
         updateCompany : updateCompany,
-        updateUser : updateUser
+        updateUser : updateUser,
+        inviteUser : inviteUser
     };
 
     function getCurrentUserId(){
@@ -244,6 +245,21 @@
       });  
 
     }
+
+    function inviteUser(invite) {
+
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      return $http({ 
+        method: 'POST', 
+        url: API.url + '/invite', 
+        data: "email="+invite.email+"&company_id="+invite.company_id+"&role="+invite.role, 
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+         
+      }).then(function(data) { 
+      });  
+
+    }
+
 
     return service;
   }

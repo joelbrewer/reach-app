@@ -730,12 +730,17 @@
     $scope.role_customer = SessionService.getJson('role_customer');
     $scope.selected_company = NavigationService.selected_company;
 
-    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
-            $scope.selected_company = NavigationService.selected_company;
-            $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
-            $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
-            $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
+    DataService.getCompanies().then(function(response){
+      $scope.companies = response;
+    }); 
+
+    $scope.invite_user = (function invite_user(invite) {
+      invite.company_id = $scope.selected_company;
+      DataService.inviteUser(invite).then(function(response){
+        goTo('/company/users');
+      });
     });
+
 
     function goTo(path) {
       NavigationService.setLocation(path);
