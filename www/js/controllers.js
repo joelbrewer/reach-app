@@ -146,6 +146,10 @@
       $scope.user = response;
     });
 
+    DataService.getCompanies().then(function(response){
+      $scope.companies = response;
+    }); 
+
     DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
       $scope.messages = response;
       $ionicScrollDelegate.scrollBottom();
