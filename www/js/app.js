@@ -7,7 +7,7 @@
  //window.pusher_client = new Pusher('95129dfbfbc16ec4a811');
  var pusher_client = new Pusher('95129dfbfbc16ec4a811',{
      authTransport: 'jsonp',
-     authEndpoint: 'http://52.27.2.199/reach/pusher/auth'
+     authEndpoint: 'https://52.27.2.199/reach/pusher/auth'
      //authEndpoint: 'http://192.168.1.2:5000/pusher/auth'
    });
  
