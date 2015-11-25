@@ -102,6 +102,7 @@
       DataService.updateUser(user).then(function(response){
            DataService.getUser($scope.uid).then(function(response){
               $scope.user = response;
+              goTo('/customer/profile');
            });
       });
     };
@@ -330,6 +331,7 @@
           DataService.getCompanies().then(function(response){
             $scope.companies = response;
             $scope.company = $scope.companies[$scope.selected_company];
+            goTo('company/profile');
           }); 
       });
     };
@@ -470,7 +472,6 @@
 
     $scope.update_perms = (function update_perms(perms){
       DataService.updatePerms(perms).then(function(response){
-        alert('permissions updated');
         goTo('/company/users');
       });
     });
@@ -700,6 +701,7 @@
 */
       });
       bulletin.message_content='';
+      goTo('/company/bulletins');
     };
 
 

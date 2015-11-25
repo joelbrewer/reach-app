@@ -19,6 +19,7 @@
   })
   .state('customer', {
     url: '/customer',
+    cache: false,
     templateUrl: 'templates/customer/feed.html',
     controller: 'CustomerFeedController as vm'
   })
@@ -29,6 +30,7 @@
   })
   .state('customer-chat', {
     url: '/customer/chat/:contact_id/:company_id',
+    cache: false,
     templateUrl: 'templates/customer/chat.html',
     controller: 'CustomerChatController as vm'
   })
@@ -40,6 +42,7 @@
   })                
   .state('tab.profile', {
     url: '/profile',
+    cache: false,
     views: {
       'tab-profile' : {
          templateUrl: 'templates/company/profile.html',
@@ -49,6 +52,7 @@
   })
   .state('tab.bulletins', {
     url: '/bulletins',
+    cache: false,
     views: {
       'tab-bulletins' : {
          templateUrl: 'templates/company/bulletins.html',
@@ -58,6 +62,7 @@
   })
   .state('tab.users', {
     url: '/users',
+    cache: false,
     views: {
       'tab-users' : {
          templateUrl: 'templates/company/users.html',
@@ -67,6 +72,7 @@
   })
   .state('tab.feed', {
     url: '/feed',
+    cache: false,
     views: {
       'tab-feed' : {
         templateUrl: 'templates/company/feed.html',
