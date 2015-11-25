@@ -3,6 +3,8 @@
 <button  ng-if="is_admin" class="button icon ion-plus button-clear" ng-click="vm.goTo('/company/bulletin/add')"></button>
 </ion-nav-buttons>
 <ion-content scroll="true"  on-swipe-right="vm.goTo('/customer')"> 
+<ion-refresher on-refresh="doRefresh()"></ion-refresher>
+
 <div class="card" ng-repeat="bulletin in bulletins">
   <div class="item item-divider">
     <h2>

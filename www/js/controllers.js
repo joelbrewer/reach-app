@@ -18,35 +18,15 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.uid = SessionService.getJson('uid');
+    refresh_data();
 
-    DataService.getUser($scope.uid).then(function(response){
-      $scope.current_user = response;
-    });
+    function refresh_data(){
+      $scope.uid = SessionService.getJson('uid');
+      $scope.contacts = [];
 
-    $scope.contacts = [];
-
-    DataService.getCustomerFeed().then(function(response){
-      //get the contact info
-      angular.forEach(response,function(value,key){
-        var contact_id;
-        //get the user_id that isn't us.
-        if(value.recipient_user_id == $scope.uid){
-          contact_id = value.from_user_id;
-        }else{
-          contact_id = value.recipient_user_id;
-        }
-        response[key].contact_id = contact_id;
-        DataService.getUser(contact_id).then(function(response){
-          $scope.contacts[contact_id] = response;
-        });
+      DataService.getUser($scope.uid).then(function(response){
+        $scope.current_user = response;
       });
-      $scope.messages = response;
-    }); 
-
-    var pusher = $pusher(pusher_client);
-    var channel = pusher.subscribe('my_channel'+$scope.uid);
-    channel.bind('my_event', function(data) {
       DataService.getCustomerFeed().then(function(response){
         //get the contact info
         angular.forEach(response,function(value,key){
@@ -64,8 +44,18 @@
         });
         $scope.messages = response;
       }); 
+    }
+
+    var pusher = $pusher(pusher_client);
+    var channel = pusher.subscribe('my_channel'+$scope.uid);
+    channel.bind('my_event', function(data) {
+      refresh_data();
     });
 
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -92,20 +82,25 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.uid = SessionService.getJson('uid');
+    refresh_data();
 
-    DataService.getUser($scope.uid).then(function(response){
-      $scope.user = response;
-    });
+    function refresh_data(){
+      $scope.uid = SessionService.getJson('uid');
+      DataService.getUser($scope.uid).then(function(response){
+        $scope.user = response;
+      });
+    }
 
     $scope.update_profile = function update_profile(user) {
       DataService.updateUser(user).then(function(response){
-           DataService.getUser($scope.uid).then(function(response){
-              $scope.user = response;
-              goTo('/customer/profile');
-           });
+              goTo('/customer');
       });
     };
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -135,26 +130,31 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.contact_id = $stateParams.contact_id;
-    $scope.company_id = $stateParams.company_id;
-    $scope.uid = SessionService.getJson('uid');
+    refresh_data();
 
-    DataService.getUser($scope.uid).then(function(response){
-      $scope.current_user = response;
-    });
+    function refresh_data(){
 
-    DataService.getUser($stateParams.contact_id).then(function(response){
-      $scope.user = response;
-    });
+      $scope.contact_id = $stateParams.contact_id;
+      $scope.company_id = $stateParams.company_id;
+      $scope.uid = SessionService.getJson('uid');
 
-    DataService.getCompanies().then(function(response){
-      $scope.companies = response;
-    }); 
+      DataService.getUser($scope.uid).then(function(response){
+        $scope.current_user = response;
+      });
 
-    DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
-      $scope.messages = response;
-      $ionicScrollDelegate.scrollBottom();
-    });
+      DataService.getUser($stateParams.contact_id).then(function(response){
+        $scope.user = response;
+      });
+
+      DataService.getCompanies().then(function(response){
+        $scope.companies = response;
+      }); 
+
+      DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
+        $scope.messages = response;
+        $ionicScrollDelegate.scrollBottom();
+      });
+    }
 
     var pusher = $pusher(pusher_client);
     var channel = pusher.subscribe('my_channel'+$scope.uid);
@@ -174,6 +174,11 @@
       });
       chat.content='';
     };
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -247,6 +252,11 @@
       // Execute action
     });
 
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
+
     function goTo(path) {
       NavigationService.setLocation(path);
     }
@@ -272,11 +282,16 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.NavigationService = NavigationService;
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.selected_company = NavigationService.selected_company;
+    refresh_data();
+
+    function refresh_data(){
+
+      $scope.NavigationService = NavigationService;
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.selected_company = NavigationService.selected_company;
+    }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
             $scope.selected_company = NavigationService.selected_company;
@@ -284,6 +299,11 @@
             $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
             $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
     });
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -309,15 +329,20 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.NavigationService = NavigationService;
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.selected_company = NavigationService.selected_company;
-    DataService.getCompanies().then(function(response){
-      $scope.companies = response;
-      $scope.company = $scope.companies[$scope.selected_company];
-    }); 
+    refresh_data();
+
+    function refresh_data(){
+
+      $scope.NavigationService = NavigationService;
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.selected_company = NavigationService.selected_company;
+      DataService.getCompanies().then(function(response){
+        $scope.companies = response;
+        $scope.company = $scope.companies[$scope.selected_company];
+      }); 
+    }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
             $scope.selected_company = NavigationService.selected_company;
@@ -328,13 +353,14 @@
 
     $scope.update_profile = function update_profile(company) {
       DataService.updateCompany(company).then(function(response){
-          DataService.getCompanies().then(function(response){
-            $scope.companies = response;
-            $scope.company = $scope.companies[$scope.selected_company];
             goTo('company/profile');
-          }); 
       });
     };
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -360,11 +386,20 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.NavigationService = NavigationService;
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.selected_company = NavigationService.selected_company;
+    refresh_data();
+
+    function refresh_data(){
+
+      $scope.NavigationService = NavigationService;
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.selected_company = NavigationService.selected_company;
+      DataService.getBulletins($scope.selected_company).then(function(response){
+        $scope.bulletins = response;
+      });
+
+    }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
             $scope.selected_company = NavigationService.selected_company;
@@ -376,8 +411,10 @@
             });
     });
 
-
-
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -404,32 +441,41 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.NavigationService = NavigationService;
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.selected_company = NavigationService.selected_company;
+    refresh_data();
+
+    function refresh_data(){
+
+      $scope.NavigationService = NavigationService;
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.selected_company = NavigationService.selected_company;
+
+      $scope.is_admin = ($scope.role_admin.indexOf($scope.selected_company) > -1);
+      $scope.is_employee = ($scope.role_employee.indexOf($scope.selected_company) > -1);
+      $scope.is_customer = ($scope.role_customer.indexOf($scope.selected_company) > -1);
+      DataService.getEmployees($scope.selected_company).then(function(response){
+        $scope.employees = response;
+      });
+
+      if($scope.is_employee || $scope.is_admin){
+      	DataService.getCustomers($scope.selected_company).then(function(response){
+      	  $scope.customers = response;
+      	});
+      }else{
+      	  $scope.customers = {};
+      }
+
+    }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
-
-            $scope.selected_company = NavigationService.selected_company;
-
-            $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
-            $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
-            $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
-
-            DataService.getEmployees($scope.selected_company).then(function(response){
-              $scope.employees = response;
-            });
-
-            if($scope.is_employee || $scope.is_admin){
-            	DataService.getCustomers($scope.selected_company).then(function(response){
-            	  $scope.customers = response;
-            	});
-            }else{
-            	  $scope.customers = {};
-            }
+      refresh_data();
     });
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -456,25 +502,35 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.NavigationService = NavigationService;
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.role = ($scope.is_admin) ? "Admin" : ($scope.is_employee) ? "Employee" : "Customer";
-    $scope.selected_company = NavigationService.selected_company;
+    refresh_data();
 
-    DataService.getUser($stateParams.contact_id).then(function(response){
-      $scope.user = response;
-      DataService.getPerms($stateParams.contact_id,$scope.selected_company).then(function(response){
-        $scope.perms = response[0]; 
+    function refresh_data(){
+
+      $scope.NavigationService = NavigationService;
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role = ($scope.is_admin) ? "Admin" : ($scope.is_employee) ? "Employee" : "Customer";
+      $scope.selected_company = NavigationService.selected_company;
+
+      DataService.getUser($stateParams.contact_id).then(function(response){
+        $scope.user = response;
+        DataService.getPerms($stateParams.contact_id,$scope.selected_company).then(function(response){
+          $scope.perms = response[0]; 
+        });
       });
-    });
+    }
 
     $scope.update_perms = (function update_perms(perms){
       DataService.updatePerms(perms).then(function(response){
         goTo('/company/users');
       });
     });
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -501,38 +557,20 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.uid = SessionService.getJson('uid');
-    $scope.NavigationService = NavigationService;
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.selected_company = NavigationService.selected_company;
-
     $scope.contacts = [];
 
-    DataService.getCompanyFeed($scope.selected_company).then(function(response){
-      //get the contact info
-      angular.forEach(response,function(value,key){
-        var contact_id;
-        //get the user_id that isn't us.
-        if(value.recipient_user_id == $scope.uid){
-          contact_id = value.from_user_id;
-        }else{
-          contact_id = value.recipient_user_id;
-        }
-        response[key].contact_id = contact_id;
-        DataService.getUser(contact_id).then(function(response){
-          $scope.contacts[contact_id] = response;
-        });
-      });
-      $scope.messages = response;
-    }); 
+    refresh_data();
 
-    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
-            $scope.selected_company = NavigationService.selected_company;
-            $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
-            $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
-            $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
+    function refresh_data(){
+      $scope.uid = SessionService.getJson('uid');
+      $scope.NavigationService = NavigationService;
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.selected_company = NavigationService.selected_company;
+      $scope.is_admin = ($scope.role_admin.indexOf($scope.selected_company) > -1);
+      $scope.is_employee = ($scope.role_employee.indexOf($scope.selected_company) > -1);
+      $scope.is_customer = ($scope.role_customer.indexOf($scope.selected_company) > -1);
 
       DataService.getCompanyFeed($scope.selected_company).then(function(response){
         //get the contact info
@@ -551,6 +589,11 @@
         });
         $scope.messages = response;
       }); 
+    }
+
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+      refresh_data();
     });
 
     var pusher = $pusher(pusher_client);
@@ -577,6 +620,11 @@
     });
 
 
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
 
     function goTo(path) {
@@ -607,30 +655,33 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.uid = SessionService.getJson('uid');
-    $scope.contact_id = $stateParams.contact_id;
-    $scope.company_id = $stateParams.company_id;
-    $scope.NavigationService = NavigationService;
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.selected_company = NavigationService.selected_company;
+    refresh_data();
 
-    DataService.getUser($stateParams.contact_id).then(function(response){
-      $scope.user = response;
-    });
+    function refresh_data(){
+      $scope.uid = SessionService.getJson('uid');
+      $scope.contact_id = $stateParams.contact_id;
+      $scope.company_id = $stateParams.company_id;
+      $scope.NavigationService = NavigationService;
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.selected_company = NavigationService.selected_company;
 
+      DataService.getUser($stateParams.contact_id).then(function(response){
+        $scope.user = response;
+      });
+
+      DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
+        $scope.messages = response;
+        $ionicScrollDelegate.scrollBottom();
+      });
+    }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
             $scope.selected_company = NavigationService.selected_company;
             $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
             $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
             $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
-    });
-
-    DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
-      $scope.messages = response;
-      $ionicScrollDelegate.scrollBottom();
     });
 
     var pusher = $pusher(pusher_client);
@@ -652,6 +703,10 @@
       chat.content='';
     };
 
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -677,12 +732,16 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.NavigationService = NavigationService;
-    $scope.uid = SessionService.getJson('uid');
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.selected_company = NavigationService.selected_company;
+    refresh_data();
+
+    function refresh_data(){
+      $scope.NavigationService = NavigationService;
+      $scope.uid = SessionService.getJson('uid');
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.selected_company = NavigationService.selected_company;
+    }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
             $scope.selected_company = NavigationService.selected_company;
@@ -704,6 +763,11 @@
       goTo('/company/bulletins');
     };
 
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
 
     function goTo(path) {
@@ -730,15 +794,19 @@
     var vm = this;
     vm.goTo = goTo;
 
-    $scope.NavigationService = NavigationService;
-    $scope.role_admin = SessionService.getJson('role_admin');
-    $scope.role_employee = SessionService.getJson('role_employee');
-    $scope.role_customer = SessionService.getJson('role_customer');
-    $scope.selected_company = NavigationService.selected_company;
+    refresh_data();
 
-    DataService.getCompanies().then(function(response){
-      $scope.companies = response;
-    }); 
+    function refresh_data(){
+      $scope.NavigationService = NavigationService;
+      $scope.role_admin = SessionService.getJson('role_admin');
+      $scope.role_employee = SessionService.getJson('role_employee');
+      $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.selected_company = NavigationService.selected_company;
+
+      DataService.getCompanies().then(function(response){
+        $scope.companies = response;
+      }); 
+    }
 
     $scope.invite_user = (function invite_user(invite) {
       invite.company_id = $scope.selected_company;
@@ -747,6 +815,11 @@
       });
     });
 
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    }; 
 
     function goTo(path) {
       NavigationService.setLocation(path);

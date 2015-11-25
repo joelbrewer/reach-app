@@ -1,5 +1,6 @@
 <ion-popover-view>
 <ion-content scroll="true">
+<ion-refresher on-refresh="doRefresh()"></ion-refresher>
 <div class="list">
 <form>
   <label ng-repeat="company in companies" class="item item-radio">

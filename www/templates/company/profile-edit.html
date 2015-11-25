@@ -5,6 +5,7 @@
 <button class="button icon ion-arrow-left-c button-clear" ng-click="vm.goTo('/company/profile')">Back</button>
 </ion-nav-buttons>
 <ion-content scroll="true"> 
+<ion-refresher on-refresh="doRefresh()"></ion-refresher>
 <div class="list" style="padding:10px;">
   <div class="item item-image">
     <img src="img/gymfed.jpeg">

@@ -3,6 +3,7 @@
 <button  ng-if="is_admin" class="button icon ion-plus button-clear" ng-click="vm.goTo('/company/user/add')"></button>
 </ion-nav-buttons>
 <ion-content scroll="true"  on-swipe-right="vm.goTo('/customer')"> 
+<ion-refresher on-refresh="doRefresh()"></ion-refresher>
 <div class="list card" ng-if="employees.length > 0">
   <div class="item item-divider">
    <h2>Employees</h2> 

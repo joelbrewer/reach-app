@@ -5,6 +5,7 @@
 <button class="button icon ion-arrow-left-c button-clear" ng-click="vm.goTo('/company/bulletins')">Back</button>
 </ion-nav-buttons>
 <ion-content scroll="true"> 
+<ion-refresher on-refresh="doRefresh()"></ion-refresher>
 
 <div class="list" style="padding:15px;">
     <textarea rows="10" style="width:99%; padding:4px;" placeholder="Type message here..." ng-model="bulletin.message_content"></textarea>

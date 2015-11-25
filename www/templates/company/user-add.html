@@ -5,6 +5,7 @@
 <button class="button icon ion-arrow-left-c button-clear" ng-click="vm.goTo('/company/users')">Back</button>
 </ion-nav-buttons>
 <ion-content scroll="true"> 
+<ion-refresher on-refresh="doRefresh()"></ion-refresher>
 
 <div class="list" style="padding:10px;">
   <label class="item item-input ">

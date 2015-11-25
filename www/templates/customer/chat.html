@@ -5,6 +5,7 @@
   </ion-nav-back-button>
 </ion-nav-bar>
 <ion-content scroll="true"> 
+<ion-refresher on-refresh="doRefresh()"></ion-refresher>
              <div ng-repeat="message in messages" class="message-wrapper">
                   <div ng-if="uid !== message.recipient_user_id">
                     <img class="profile-pic left" src="img/default-avatar.png" onerror="onProfilePicError(this)" />
