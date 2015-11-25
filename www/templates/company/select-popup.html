@@ -5,10 +5,12 @@
 <form>
   <label ng-repeat="company in companies" class="item item-radio">
     <input type="radio" name="group" ng-model="NavigationService.selected_company" value="{{company.id}}" ng-change="closePopover();">
-    <div class="item-content">
-      {{company.name}}
+    <div class="radio-content">
+      <div class="item-content">
+        {{company.name}}
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
     </div>
-    <i class="radio-icon ion-checkmark"></i>
   </label>
 </form>
 </div>

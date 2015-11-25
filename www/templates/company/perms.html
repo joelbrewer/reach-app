@@ -12,24 +12,30 @@
   </div>
   <label class="item item-radio ">
     <input type="radio" name="group" value="customer" ng-model="perms.role">
-    <div class="item-content">
-     Customer 
+    <div class="radio-content">
+      <div class="item-content">
+      Customer 
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
     </div>
-    <i class="radio-icon ion-checkmark"></i>
   </label>
   <label class="item item-radio">
     <input type="radio" name="group" value="employee" ng-model="perms.role">
-    <div class="item-content">
-      Employee
+    <div class="radio-content">
+      <div class="item-content">
+        Employee
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
     </div>
-    <i class="radio-icon ion-checkmark"></i>
   </label>
   <label class="item item-radio">
     <input type="radio" name="group" value="admin" ng-model="perms.role">
-    <div class="item-content">
-      Admin
+    <div class="radio-content">
+      <div class="item-content">
+        Admin
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
     </div>
-    <i class="radio-icon ion-checkmark"></i>
   </label>
 <button class="button button-block button-positive" ng-click="update_perms(perms);">
 Update
