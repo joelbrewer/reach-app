@@ -1,4 +1,4 @@
-<ion-view view-title="New Bulletin">
+<ion-view view-title="{{companies[selected_company].name}}">
 <ion-nav-bar  class="bar-balanced">
 </ion-nav-bar>
 <ion-nav-buttons side="left">
@@ -8,7 +8,7 @@
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
 
 <div class="list" style="padding:15px;">
-    <textarea rows="10" style="width:99%; padding:4px;" placeholder="Type message here..." ng-model="bulletin.message_content"></textarea>
+    <textarea rows="10" style="width:99%; padding:4px;" placeholder="Type bulletin here..." ng-model="bulletin.message_content"></textarea>
 <button class="button button-block button-positive" ng-click="send_bulletin(bulletin);">
 Send
 </button>

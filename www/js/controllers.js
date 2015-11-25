@@ -667,6 +667,9 @@
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
       $scope.selected_company = NavigationService.selected_company;
+      DataService.getCompanies().then(function(response){
+        $scope.companies = response;
+      }); 
 
       DataService.getUser($stateParams.contact_id).then(function(response){
         $scope.user = response;
@@ -742,6 +745,9 @@
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
       $scope.selected_company = NavigationService.selected_company;
+      DataService.getCompanies().then(function(response){
+        $scope.companies = response;
+      }); 
     }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
