@@ -445,6 +445,7 @@
 
     function refresh_data(){
 
+      $scope.uid = SessionService.getJson('uid');
       $scope.NavigationService = NavigationService;
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');

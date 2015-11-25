@@ -4,11 +4,11 @@
 </ion-nav-buttons>
 <ion-content scroll="true"  on-swipe-right="vm.goTo('/customer')"> 
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
-<div class="list card" ng-if="employees.length > 0">
+<div class="list card" ng-if="(employees.length > 0) && (employees.length != 1 && employees[0].id == uid) ">
   <div class="item item-divider">
    <h2>Employees</h2> 
   </div>
-  <div class="item item-avatar item-button-right" ng-repeat="employee in employees" >
+  <div class="item item-avatar item-button-right" ng-repeat="employee in employees | filter: {id : !uid}">
     <img  src="img/default-avatar.png">
     <h2>{{employee.first_name}} {{employee.last_name}}</h2><p>Role</p>
     <div class="buttons">
