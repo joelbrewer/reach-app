@@ -287,17 +287,17 @@
     function refresh_data(){
 
       $scope.NavigationService = NavigationService;
+      $scope.selected_company = NavigationService.selected_company;
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
-      $scope.selected_company = NavigationService.selected_company;
+      DataService.getCompanies().then(function(response){
+        $scope.companies = response;
+      }); 
     }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
-            $scope.selected_company = NavigationService.selected_company;
-            $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
-            $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
-            $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
+      refresh_data();
     });
 
     $scope.doRefresh = function() {
