@@ -226,6 +226,7 @@
     $scope.role_admin = SessionService.getJson('role_admin');
     $scope.role_employee = SessionService.getJson('role_employee');
     $scope.role_customer = SessionService.getJson('role_customer');
+    $scope.role_super = SessionService.getJson('role_super');
 
     $scope.selected_company = NavigationService.selected_company;
 
@@ -234,7 +235,11 @@
             $scope.is_admin = ($scope.role_admin.indexOf(newVal) > -1);
             $scope.is_employee = ($scope.role_employee.indexOf(newVal) > -1);
             $scope.is_customer = ($scope.role_customer.indexOf(newVal) > -1);
+            $scope.is_super = ($scope.role_super == 1);
             $scope.role = ($scope.is_admin) ? "Admin" : ($scope.is_employee) ? "Employee" : "Customer";
+            if($scope.is_super){
+              $scope.role = 'Super Admin';
+            }
     });
 
     DataService.getCompanies().then(function(response){
@@ -307,6 +312,7 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
       }); 
@@ -353,6 +359,7 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       $scope.selected_company = NavigationService.selected_company;
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
@@ -410,6 +417,7 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       $scope.selected_company = NavigationService.selected_company;
       DataService.getBulletins($scope.selected_company).then(function(response){
         $scope.bulletins = response;
@@ -466,16 +474,18 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       $scope.selected_company = NavigationService.selected_company;
 
       $scope.is_admin = ($scope.role_admin.indexOf($scope.selected_company) > -1);
       $scope.is_employee = ($scope.role_employee.indexOf($scope.selected_company) > -1);
       $scope.is_customer = ($scope.role_customer.indexOf($scope.selected_company) > -1);
+
       DataService.getEmployees($scope.selected_company).then(function(response){
         $scope.employees = response;
       });
 
-      if($scope.is_employee || $scope.is_admin){
+      if($scope.is_employee || $scope.is_admin || $scope.is_super){
       	DataService.getCustomers($scope.selected_company).then(function(response){
       	  $scope.customers = response;
       	});
@@ -484,7 +494,6 @@
       }
 
     }
-
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
       refresh_data();
     });
@@ -527,6 +536,7 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       $scope.role = ($scope.is_admin) ? "Admin" : ($scope.is_employee) ? "Employee" : "Customer";
       $scope.selected_company = NavigationService.selected_company;
 
@@ -584,6 +594,7 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       $scope.selected_company = NavigationService.selected_company;
       $scope.is_admin = ($scope.role_admin.indexOf($scope.selected_company) > -1);
       $scope.is_employee = ($scope.role_employee.indexOf($scope.selected_company) > -1);
@@ -682,6 +693,7 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       $scope.selected_company = NavigationService.selected_company;
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
@@ -760,6 +772,7 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       $scope.selected_company = NavigationService.selected_company;
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
@@ -824,6 +837,7 @@
       $scope.role_admin = SessionService.getJson('role_admin');
       $scope.role_employee = SessionService.getJson('role_employee');
       $scope.role_customer = SessionService.getJson('role_customer');
+      $scope.role_super = SessionService.getJson('role_super');
       $scope.selected_company = NavigationService.selected_company;
 
       DataService.getCompanies().then(function(response){

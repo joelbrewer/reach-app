@@ -1,18 +1,18 @@
 <ion-view view-title="{{companies[(selected_company)].name}}">
 <ion-nav-buttons side="left" >
-<button  ng-if="is_admin" class="button icon ion-plus button-clear" ng-click="vm.goTo('/company/user/add')"></button>
+<button  ng-if="is_admin || is_super" class="button icon ion-plus button-clear" ng-click="vm.goTo('/company/user/add')"></button>
 </ion-nav-buttons>
 <ion-content scroll="true"  on-swipe-right="vm.goTo('/customer')"> 
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
-<div class="list card" ng-if="(employees.length > 0) && (employees.length != 1 && employees[0].id == uid) ">
+<div class="list card" ng-if="(employees.length > 0) && !(employees.length == 1 && employees[0].id == uid)">
   <div class="item item-divider">
    <h2>Employees</h2> 
   </div>
-  <div class="item item-avatar item-button-right" ng-repeat="employee in employees | filter: {id : !uid}">
+  <div class="item item-avatar item-button-right" ng-repeat="employee in employees | filter: {id : '!' + uid}">
     <img  src="img/default-avatar.png">
     <h2>{{employee.first_name}} {{employee.last_name}}</h2><p>Role</p>
     <div class="buttons">
-      <button ng-if="is_admin" class="button button-light ion-edit" ng-click="vm.goTo('company/perms/{{employee.id}}/{{selected_company}}');"></button>
+      <button ng-if="is_admin || is_super" class="button button-light ion-edit" ng-click="vm.goTo('company/perms/{{employee.id}}/{{selected_company}}');"></button>
       <button class="button button-light" ng-click="vm.goTo('company/chat/{{employee.id}}/{{selected_company}}');"><i class="icon  ion-chatbox"></i></button>
     </div>
   </div>
@@ -27,7 +27,7 @@
     <h2>{{customer.first_name}} {{customer.last_name}}</h2>
     <p>Role</p>
       <div class="buttons">
-        <button ng-if="is_admin" class="button button-light ion-edit" ng-click="vm.goTo('company/perms/{{customer.id}}/{{selected_company}}');"></button>
+        <button ng-if="is_admin || is_super" class="button button-light ion-edit" ng-click="vm.goTo('company/perms/{{customer.id}}/{{selected_company}}');"></button>
         <button class="button button-light" ng-click="vm.goTo('company/chat/{{customer.id}}/{{selected_company}}');"><i class="icon  ion-chatbox"></i></button>
       </div>
   </div>

@@ -40,6 +40,7 @@
       SessionService.setJson('role_admin', decoded['role_admin']);
       SessionService.setJson('role_employee', decoded['role_employee']);
       SessionService.setJson('role_customer', decoded['role_customer']);
+      SessionService.setJson('role_super', decoded['role_super']);
       console.log('Session cached.');
       SessionService.set('auth_token', data.auth_token);
     }
