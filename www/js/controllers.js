@@ -23,6 +23,7 @@
     function refresh_data(){
       $scope.uid = SessionService.getJson('uid');
       $scope.contacts = [];
+      $scope.companies = [];
 
       DataService.getUser($scope.uid).then(function(response){
         $scope.current_user = response;
@@ -30,17 +31,27 @@
       DataService.getCustomerFeed().then(function(response){
         //get the contact info
         angular.forEach(response,function(value,key){
+
+          DataService.getCompany(value.company_id).then(function(response2){
+            $scope.companies[value.company_id] = response2;
+          });
+
           var contact_id;
           //get the user_id that isn't us.
-          if(value.recipient_user_id == $scope.uid){
-            contact_id = value.from_user_id;
+          if(value.type == 'message'){
+
+            if(value.recipient_user_id == $scope.uid){
+              contact_id = value.from_user_id;
+            }else{
+              contact_id = value.recipient_user_id;
+            }
+            response[key].contact_id = contact_id;
+            DataService.getUser(contact_id).then(function(response){
+              $scope.contacts[contact_id] = response;
+            });
           }else{
-            contact_id = value.recipient_user_id;
+            
           }
-          response[key].contact_id = contact_id;
-          DataService.getUser(contact_id).then(function(response){
-            $scope.contacts[contact_id] = response;
-          });
         });
         $scope.messages = response;
       }); 
@@ -56,6 +67,11 @@
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
     }; 
+
+    $scope.goToBulletin = function(company_id) {
+      NavigationService.selected_company = company_id;
+      goTo('/company/bulletins');
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);

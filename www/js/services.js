@@ -136,7 +136,7 @@
 
     function getCompany(cid){
       return $http({method:'GET', url:API.url + '/company/'+cid})
-        .success(function(resulty) {
+        .then(function(resulty) {
 //alert(angular.toJson(resulty.data));
             return resulty.data;
         });
