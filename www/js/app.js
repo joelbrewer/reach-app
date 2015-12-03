@@ -11,11 +11,12 @@
      //authEndpoint: 'http://192.168.1.2:5000/pusher/auth'
    });
  
-var ReachApp = angular.module('starter', ['ionic','pusher-angular', 'angular-jwt'])
+var ReachApp = angular.module('starter', ['ionic','ionic.service.core','pusher-angular', 'angular-jwt'])
 //var ReachApp = angular.module('starter', ['ionic','pusher-angular', 'angularMoment'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
+
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }

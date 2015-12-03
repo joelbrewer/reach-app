@@ -105,6 +105,11 @@
     templateUrl: 'templates/company/profile-edit.html',
     controller: 'CompanyProfileEditController as vm'
   })
+  .state('push-notification', {
+    url: '/push-notification',
+    templateUrl: 'templates/push-notification-landing.html',
+    controller: 'PushNotificationLandingController as vm'
+  })
 ;
 
   $urlRouterProvider.otherwise('/login');

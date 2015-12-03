@@ -6,9 +6,9 @@
     .module('starter')
     .factory('AuthenticationService', AuthenticationService);
 
-  AuthenticationService.$inject = ['SessionService', '$http', 'API', 'DataService','NavigationService', 'jwtHelper'];
+  AuthenticationService.$inject = ['PushService', 'SessionService', '$http', 'API', 'DataService','NavigationService', 'jwtHelper'];
 
-  function AuthenticationService(SessionService, $http, API, DataService, NavigationService, jwtHelper) {
+  function AuthenticationService(PushService, SessionService, $http, API, DataService, NavigationService, jwtHelper) {
     var service = {};
     service.login = login;
     service.cacheSession = cacheSession;
@@ -29,7 +29,27 @@
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).success(function(data) { 
         cacheSession(data);
-      });  
+
+        // register for push notifications
+        var push = new Ionic.Push({
+          "debug": true,
+          "onNotification" : function(notification) {
+            if (notification._raw.additionalData.foreground == false) {
+              NavigationService.setLocation(PushService.chatWindowUrl(notification));
+            }
+          }
+        });
+
+        push.register(function(token) {
+          console.log("Device token:",token.token);
+          $http({ 
+            method: 'POST', 
+            url: API.url + '/device-token', 
+            data: "user_id="+ SessionService.getJson("uid") +"&device_token="+token.token,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          });
+        });
+      });
     }
 
     function cacheSession(data) {
@@ -283,6 +303,40 @@
 
   function setLocation(path) {
     location.href = "#" + path;
+  }
+
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .factory('PushService', PushService);
+
+  PushService.$inject = ['SessionService'];
+
+  function PushService(SessionService) {
+
+    var service = {};
+    service.chatWindowUrl = chatWindowUrl;
+
+    function chatWindowUrl(notification) {
+      var chat_window_type = "";
+      var company_id = notification._payload.company_id;
+      var sender_id = notification._payload.sender_id;
+      var role_customer = SessionService.getJson('role_customer');
+      if (role_customer.indexOf(company_id) > -1) {
+        chat_window_type = "customer";
+      } else {
+        chat_window_type = "company";
+      }
+
+      var url = "/" + chat_window_type + "/" + "chat" + "/" + sender_id + "/" + company_id;
+      return url;
+    }
+
+    return service;
   }
 
 })();

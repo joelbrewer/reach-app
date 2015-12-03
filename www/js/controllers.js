@@ -903,3 +903,17 @@
     }
   }
 })();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
+    .controller('PushNotificationLandingController', PushNotificationLandingController);
+
+  PushNotificationLandingController.$inject = [];
+  function PushNotificationLandingController() {
+    var vm = this;
+  }
+})();
+
