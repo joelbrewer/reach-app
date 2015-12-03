@@ -34,9 +34,10 @@
         var push = new Ionic.Push({
           "debug": true,
           "onNotification" : function(notification) {
-            if (notification._raw.additionalData.foreground == false) {
-              NavigationService.setLocation(PushService.chatWindowUrl(notification));
-            }
+            PushService.process(notification);
+            //if (notification._payload.additionalData.foreground == false) {
+            //  NavigationService.setLocation(PushService.chatWindowUrl(notification));
+            //}
           }
         });
 
@@ -316,10 +317,48 @@
 
   PushService.$inject = ['SessionService'];
 
+
   function PushService(SessionService) {
 
+    function Bulletin (notification) {
+      this.notification = notification;
+    }
+
+    Bulletin.prototype.process = function() {
+      console.log("Processing bulletin");
+    }
+
+    function Message (notification) {
+      this.notification = notification;
+    }
+
+    Message.prototype.process = function() {
+      console.log("Processing message");
+        if (notification._raw.additionalData.foreground == false) {
+          NavigationService.setLocation(chatWindowUrl(notification));
+        }
+    }
+
+    var pushes = {
+      "bulletin" : Bulletin,
+      "message"  : Message
+    }
+
+    notification._payload.type 
+
     var service = {};
-    service.chatWindowUrl = chatWindowUrl;
+
+    service.process = process;
+
+    function process(notification) {
+      pushes[notification._payload.push_type].process();
+    }
+
+    function processMessageNotification(notification) {
+      if (notification._raw.additionalData.foreground == false) {
+        NavigationService.setLocation(chatWindowUrl(notification));
+      }
+    }
 
     function chatWindowUrl(notification) {
       var chat_window_type = "";
