@@ -35,9 +35,6 @@
           "debug": true,
           "onNotification" : function(notification) {
             PushService.process(notification);
-            //if (notification._payload.additionalData.foreground == false) {
-            //  NavigationService.setLocation(PushService.chatWindowUrl(notification));
-            //}
           }
         });
 
@@ -315,24 +312,27 @@
     .module('starter')
     .factory('PushService', PushService);
 
-  PushService.$inject = ['SessionService'];
+  PushService.$inject = ['NavigationService','SessionService'];
 
 
-  function PushService(SessionService) {
+  function PushService(NavigationService, SessionService) {
 
     function Bulletin (notification) {
       this.notification = notification;
     }
 
-    Bulletin.prototype.process = function() {
+    Bulletin.prototype.process = function(notification) {
       console.log("Processing bulletin");
+      if (notification._raw.additionalData.foreground == false) {
+        NavigationService.setLocation("/customer");
+      }
     }
 
     function Message (notification) {
       this.notification = notification;
     }
 
-    Message.prototype.process = function() {
+    Message.prototype.process = function(notification) {
       console.log("Processing message");
         if (notification._raw.additionalData.foreground == false) {
           NavigationService.setLocation(chatWindowUrl(notification));
@@ -344,14 +344,12 @@
       "message"  : Message
     }
 
-    notification._payload.type 
-
     var service = {};
 
     service.process = process;
 
     function process(notification) {
-      pushes[notification._payload.push_type].process();
+      pushes[notification._payload.push_type].prototype.process(notification);
     }
 
     function processMessageNotification(notification) {
