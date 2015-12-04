@@ -402,6 +402,58 @@
 
   angular
     .module('starter')
+    .controller('CompanyAddController', CompanyAddController);
+  CompanyAddController.$inject = [
+                              '$scope',
+                              'DataService',
+                              'NavigationService',
+			      'SessionService'
+                            ];
+
+  function CompanyAddController($scope, DataService, NavigationService, SessionService) {
+
+    var vm = this;
+    vm.goTo = goTo;
+
+    refresh_data();
+
+    function refresh_data(){
+
+      $scope.NavigationService = NavigationService;
+      $scope.role_super = SessionService.getJson('role_super');
+//bounce if not super @todo
+      $scope.selected_company = NavigationService.selected_company;
+    }
+
+    $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
+            $scope.selected_company = NavigationService.selected_company;
+    });
+
+    $scope.add_company = function add_company(company) {
+      DataService.addCompany(company).then(function(response){
+//should probably get the new ID and redirect...
+            goTo('company/profile');
+      });
+    };
+
+    $scope.doRefresh = function() {
+         refresh_data();
+         $scope.$broadcast('scroll.refreshComplete');
+    };
+
+    function goTo(path) {
+      NavigationService.setLocation(path);
+    }
+  }
+})();
+
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('starter')
     .controller('CompanyBulletinController', CompanyBulletinController);
   CompanyBulletinController.$inject = [
                               '$scope',

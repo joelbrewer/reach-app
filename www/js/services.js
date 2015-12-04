@@ -111,6 +111,7 @@
         sendBulletin : sendBulletin,
         updatePerms : updatePerms,
         updateCompany : updateCompany,
+        addCompany : addCompany,
         updateUser : updateUser,
         inviteUser : inviteUser
     };
@@ -268,6 +269,19 @@
       }).then(function(data) {
       });
 
+    }
+
+    function addCompany(company) {
+
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      return $http({
+        method: 'POST',
+        url: API.url + '/company/add',
+        data: "name="+company.name+"&description="+company.description,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+      }).then(function(data) {
+      });
     }
 
     function updatePerms(perm) {

@@ -105,6 +105,11 @@
     templateUrl: 'templates/company/profile-edit.html',
     controller: 'CompanyProfileEditController as vm'
   })
+  .state('company-add', {
+    url: '/company/add',
+    templateUrl: 'templates/company/company-add.html',
+    controller: 'CompanyAddController as vm'
+  })
   .state('push-notification', {
     url: '/push-notification',
     templateUrl: 'templates/push-notification-landing.html',
