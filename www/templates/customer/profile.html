@@ -4,7 +4,7 @@
 <i class="ion-arrow-left-c"></i> Back
   </ion-nav-back-button>
 </ion-nav-bar>
-<ion-content scroll="true"> 
+<ion-content scroll="true">
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
 
 <div class="list" style="padding:10px;">
@@ -31,9 +31,14 @@
     <span class="input-label">Position</span>
     <input type="text" ng-model="user.position">
   </label>
-<button class="button button-block button-positive" ng-click="update_profile(user);">
-  Update
-</button>
+  <button class="button button-block button-positive" ng-click="update_profile(user);">
+    Update
+  </button>
+
+  <br/><br/>
+  <button class="button button-block" ng-click="logout(user);">
+    Sign Out
+  </button>
 
 </div>
 

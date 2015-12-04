@@ -50,11 +50,11 @@
               $scope.contacts[contact_id] = response;
             });
           }else{
-            
+
           }
         });
         $scope.messages = response;
-      }); 
+      });
     }
 
     var pusher = $pusher(pusher_client);
@@ -66,7 +66,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     $scope.goToBulletin = function(company_id) {
       NavigationService.selected_company = company_id;
@@ -89,11 +89,12 @@
   CustomerProfileController.$inject = [
                               '$scope',
                               'NavigationService',
+                              'AuthenticationService',
                               'DataService',
                               'SessionService'
                             ];
 
-  function CustomerProfileController($scope, NavigationService, DataService, SessionService) {
+  function CustomerProfileController($scope, NavigationService, AuthenticationService, DataService, SessionService) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -113,10 +114,15 @@
       });
     };
 
+    $scope.logout = function logout() {
+      SessionService.reset();
+      goTo('/login');
+    };
+
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -135,7 +141,7 @@
                               '$scope',
                               'NavigationService',
                               'DataService',
-                              'SessionService', 
+                              'SessionService',
                               '$stateParams',
                               '$pusher',
                               '$ionicScrollDelegate'
@@ -164,7 +170,7 @@
 
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
-      }); 
+      });
 
       DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
         $scope.messages = response;
@@ -194,7 +200,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -211,7 +217,7 @@
     .controller('CompanyTabsController', CompanyTabsController);
   CompanyTabsController.$inject = [
                               '$scope',
-                              '$ionicPopover', 
+                              '$ionicPopover',
                               'SessionService',
                               'DataService',
                               'NavigationService'
@@ -220,7 +226,7 @@
 
     var vm = this;
     vm.goTo = goTo;
-    
+
     $scope.NavigationService = NavigationService;
 
     $scope.role_admin = SessionService.getJson('role_admin');
@@ -244,7 +250,7 @@
 
     DataService.getCompanies().then(function(response){
       $scope.companies = response;
-    }); 
+    });
 
     //selector popup stuff
     //
@@ -276,7 +282,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -315,7 +321,7 @@
       $scope.role_super = SessionService.getJson('role_super');
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
-      }); 
+      });
     }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
@@ -325,7 +331,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -364,7 +370,7 @@
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
         $scope.company = $scope.companies[$scope.selected_company];
-      }); 
+      });
     }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
@@ -383,7 +389,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -438,7 +444,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -501,7 +507,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -543,7 +549,7 @@
       DataService.getUser($stateParams.contact_id).then(function(response){
         $scope.user = response;
         DataService.getPerms($stateParams.contact_id,$scope.selected_company).then(function(response){
-          $scope.perms = response[0]; 
+          $scope.perms = response[0];
         });
       });
     }
@@ -557,7 +563,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -616,7 +622,7 @@
           });
         });
         $scope.messages = response;
-      }); 
+      });
     }
 
 
@@ -644,7 +650,7 @@
             });
           });
           $scope.messages = response;
-        }); 
+        });
     });
 
 
@@ -652,7 +658,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
 
     function goTo(path) {
@@ -697,7 +703,7 @@
       $scope.selected_company = NavigationService.selected_company;
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
-      }); 
+      });
 
       DataService.getUser($stateParams.contact_id).then(function(response){
         $scope.user = response;
@@ -738,7 +744,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);
@@ -776,7 +782,7 @@
       $scope.selected_company = NavigationService.selected_company;
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
-      }); 
+      });
     }
 
     $scope.$watch("NavigationService.selected_company",function(newVal, oldVal) {
@@ -788,7 +794,7 @@
 
     $scope.send_bulletin = function send_bulletin(bulletin) {
       bulletin.company_id = $scope.selected_company;
-      bulletin.sender_uid = $scope.uid; 
+      bulletin.sender_uid = $scope.uid;
       DataService.sendBulletin(bulletin).then(function(response){
 /*           DataService.getMessages($stateParams.contact_id).then(function(response){
               $scope.messages = response;
@@ -803,7 +809,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
 
     function goTo(path) {
@@ -842,7 +848,7 @@
 
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
-      }); 
+      });
     }
 
     $scope.invite_user = (function invite_user(invite) {
@@ -856,7 +862,7 @@
     $scope.doRefresh = function() {
          refresh_data();
          $scope.$broadcast('scroll.refreshComplete');
-    }; 
+    };
 
     function goTo(path) {
       NavigationService.setLocation(path);

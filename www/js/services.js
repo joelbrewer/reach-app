@@ -11,6 +11,7 @@
   function AuthenticationService(PushService, SessionService, $http, API, DataService, NavigationService, jwtHelper) {
     var service = {};
     service.login = login;
+    service.logout = logout;
     service.cacheSession = cacheSession;
 
     return service;
@@ -21,13 +22,13 @@
 
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
-      return $http({ 
-        method: 'POST', 
+      return $http({
+        method: 'POST',
         url: API.url + '/login',
-        skipAuthorization: true, 
-        data: "email=" + credentials.email + "&password=" + credentials.password, 
+        skipAuthorization: true,
+        data: "email=" + credentials.email + "&password=" + credentials.password,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-      }).success(function(data) { 
+      }).success(function(data) {
         cacheSession(data);
 
         // register for push notifications
@@ -40,14 +41,32 @@
 
         push.register(function(token) {
           console.log("Device token:",token.token);
-          $http({ 
-            method: 'POST', 
-            url: API.url + '/device-token', 
+          $http({
+            method: 'POST',
+            url: API.url + '/device-token',
             data: "user_id="+ SessionService.getJson("uid") +"&device_token="+token.token,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           });
         });
       });
+    }
+
+    function logout() {
+
+      SessionService.reset();
+
+      /*
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+
+      return $http({
+        method: 'POST',
+        url: API.url + '/logout',
+        skipAuthorization: false,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).success(function(data) {
+
+      });
+      */
     }
 
     function cacheSession(data) {
@@ -98,7 +117,7 @@
 
     function getCurrentUserId(){
 
-      return 1; 
+      return 1;
 
     }
 
@@ -198,84 +217,84 @@
     function sendMessage(sender_uid, company_id, recipient_uid, message_content) {
 
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-      return $http({ 
-        method: 'POST', 
-        url: API.url + '/message', 
-        data: "sender_uid="+sender_uid+"&company_id="+company_id+"&recipient_uid="+recipient_uid+"&message_content="+message_content, 
+      return $http({
+        method: 'POST',
+        url: API.url + '/message',
+        data: "sender_uid="+sender_uid+"&company_id="+company_id+"&recipient_uid="+recipient_uid+"&message_content="+message_content,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-         
-      }).then(function(data) { 
-      });  
+
+      }).then(function(data) {
+      });
 
     }
 
     function sendBulletin(bulletin) {
 
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-      return $http({ 
-        method: 'POST', 
-        url: API.url + '/bulletin', 
-        data: "sender_uid="+bulletin.sender_uid+"&company_id="+bulletin.company_id+"&message_content="+bulletin.message_content, 
+      return $http({
+        method: 'POST',
+        url: API.url + '/bulletin',
+        data: "sender_uid="+bulletin.sender_uid+"&company_id="+bulletin.company_id+"&message_content="+bulletin.message_content,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-         
-      }).then(function(data) { 
-      });  
+
+      }).then(function(data) {
+      });
 
     }
 
     function updateUser(user) {
 
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-      return $http({ 
-        method: 'POST', 
-        url: API.url + '/user', 
-        data: "id="+user.id+"&first_name="+user.first_name+"&last_name="+user.last_name+"&email="+user.email+"&company_name="+user.company_name+"&position="+user.position, 
+      return $http({
+        method: 'POST',
+        url: API.url + '/user',
+        data: "id="+user.id+"&first_name="+user.first_name+"&last_name="+user.last_name+"&email="+user.email+"&company_name="+user.company_name+"&position="+user.position,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-         
-      }).then(function(data) { 
-      });  
+
+      }).then(function(data) {
+      });
 
     }
 
     function updateCompany(company) {
 
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-      return $http({ 
-        method: 'POST', 
-        url: API.url + '/company', 
-        data: "id="+company.id+"&name="+company.name+"&description="+company.description+"&long_desc="+company.long_desc, 
+      return $http({
+        method: 'POST',
+        url: API.url + '/company',
+        data: "id="+company.id+"&name="+company.name+"&description="+company.description+"&long_desc="+company.long_desc,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-         
-      }).then(function(data) { 
-      });  
+
+      }).then(function(data) {
+      });
 
     }
 
     function updatePerms(perm) {
 
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-      return $http({ 
-        method: 'POST', 
-        url: API.url + '/perm', 
-        data: "id="+perm.id+"&user_id="+perm.user_id+"&company_id="+perm.company_id+"&role="+perm.role, 
+      return $http({
+        method: 'POST',
+        url: API.url + '/perm',
+        data: "id="+perm.id+"&user_id="+perm.user_id+"&company_id="+perm.company_id+"&role="+perm.role,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-         
-      }).then(function(data) { 
-      });  
+
+      }).then(function(data) {
+      });
 
     }
 
     function inviteUser(invite) {
 
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-      return $http({ 
-        method: 'POST', 
-        url: API.url + '/invite', 
-        data: "email="+invite.email+"&company_id="+invite.company_id+"&role="+invite.role, 
+      return $http({
+        method: 'POST',
+        url: API.url + '/invite',
+        data: "email="+invite.email+"&company_id="+invite.company_id+"&role="+invite.role,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-         
-      }).then(function(data) { 
-      });  
+
+      }).then(function(data) {
+      });
 
     }
 
