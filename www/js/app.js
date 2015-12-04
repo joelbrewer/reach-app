@@ -12,7 +12,8 @@
    });
 
 var ReachApp = angular.module('starter',
-  ['ionic',
+  [ 'ionic',
+    'ngCordova',
     'ionic.service.core',
     'pusher-angular',
     'angular-jwt'

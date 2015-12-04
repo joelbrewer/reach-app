@@ -182,6 +182,7 @@
     .controller('CustomerProfileController', CustomerProfileController);
 
   CustomerProfileController.$inject = [
+                              '$cordovaImagePicker',
                               '$scope',
                               'NavigationService',
                               'AuthenticationService',
@@ -189,14 +190,35 @@
                               'SessionService'
                             ];
 
-  function CustomerProfileController($scope, NavigationService, AuthenticationService, DataService, SessionService) {
+  function CustomerProfileController($cordovaImagePicker, AuthenticationService, $scope, NavigationService, DataService, SessionService) {
 
     var vm = this;
     vm.goTo = goTo;
+    vm.pick_photo = pick_photo;
 
     $scope.pass = {};
 
     refresh_data();
+
+    function pick_photo() {
+
+      var options = {
+        maximumImagesCount: 1,
+        width: 1024,
+        height: 768,
+        quality: 80,
+        destinationType: Camera.DestinationType.DATA_URL
+      };
+
+      $cordovaImagePicker.getPictures(options)
+        .then(function (results) {
+          for (var i = 0; i < results.length; i++) {
+            $scope.user.avatar = results[i];
+            console.log(results);
+          }
+          console.log($scope.user);
+        });
+    }
 
     function refresh_data(){
       $scope.uid = SessionService.getJson('uid');
