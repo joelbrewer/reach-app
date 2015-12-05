@@ -249,7 +249,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/user',
-        data: "id="+user.id+"&first_name="+user.first_name+"&last_name="+user.last_name+"&email="+user.email+"&company_name="+user.company_name+"&position="+user.position,
+        data: "id="+user.id+"&first_name="+user.first_name+"&last_name="+user.last_name+"&email="+user.email+"&company_name="+user.company_name+"&position="+user.position+'&update_pass='+user.update_pass,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {

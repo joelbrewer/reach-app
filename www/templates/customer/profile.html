@@ -31,7 +31,15 @@
     <span class="input-label">Position</span>
     <input type="text" ng-model="user.position">
   </label>
-  <button class="button button-block button-positive" ng-click="update_profile(user);">
+  <label class="item item-input ">
+    <span class="input-label">Password</span>
+    <input type="password" placeholder="Change password" ng-model="pass.pass1">
+  </label>
+  <label class="item item-input ">
+    <span class="input-label">Confirm</span>
+    <input type="password" placeholder="Type password again" ng-model="pass.pass2">
+  </label>
+  <button class="button button-block button-positive" ng-click="update_profile(user,pass);">
     Update
   </button>
 

@@ -99,6 +99,8 @@
     var vm = this;
     vm.goTo = goTo;
 
+    $scope.pass = {};
+
     refresh_data();
 
     function refresh_data(){
@@ -108,7 +110,14 @@
       });
     }
 
-    $scope.update_profile = function update_profile(user) {
+    $scope.update_profile = function update_profile(user,pass) {
+      if(pass.pass1 != '' && pass.pass1 == pass.pass2){
+        user.update_pass = pass.pass1;
+      }else{
+        user.update_pass = '0';
+      }
+      pass.pass1 = '';
+      pass.pass2 = '';
       DataService.updateUser(user).then(function(response){
               goTo('/customer');
       });
