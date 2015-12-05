@@ -5,9 +5,9 @@
     .module('starter')
     .config(Routes);
 
-  Routes.$inject = ['$stateProvider', '$urlRouterProvider'];
+  Routes.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
 
-  function Routes($stateProvider, $urlRouterProvider) {
+  function Routes($stateProvider, $urlRouterProvider, $httpProvider) {
 
   $stateProvider
   .state('login', {
@@ -39,7 +39,7 @@
     abstract: true,
     templateUrl: 'templates/company/tabs.html',
     controller: 'CompanyTabsController as vm'
-  })                
+  })
   .state('tab.profile', {
     url: '/profile',
     cache: false,
@@ -114,10 +114,10 @@
     url: '/push-notification',
     templateUrl: 'templates/push-notification-landing.html',
     controller: 'PushNotificationLandingController as vm'
-  })
-;
+  });
 
   $urlRouterProvider.otherwise('/login');
+  $httpProvider.interceptors.push('APIInterceptor')
 
   }
 
