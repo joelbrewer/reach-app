@@ -1,12 +1,10 @@
 <ion-view view-title="{{companies[(selected_company)].name}}">
 <ion-content scroll="true"  on-swipe-right="vm.goTo('/customer')"> 
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
-                    
-             <div ng-repeat="message in messages" class="message-wrapper">
-      
-                      
-                    <img class="profile-pic left" ng-src="img/default-avatar.png"/>
-                      <div class="chat-bubble left"  ng-click="vm.goTo('/company/chat/{{message.contact_id}}/{{message.company_id}}');">
+<div class="list">
+                    <a ng-repeat="message in messages" class="item item-avatar" href="#">
+                    <img class="profile-pic " ng-src="img/default-avatar.png"/>
+                      <div ng-click="vm.goTo('/company/chat/{{message.contact_id}}/{{message.company_id}}');">
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
                                   class="bold">{{contacts[message.contact_id].first_name}} {{contacts[message.contact_id].last_name}}</span>,
@@ -16,14 +14,8 @@
                           </div>
                           <div ng-if="message.recipient_user_id === uid" class="message" ng-bind-html="message.message_content" autolinker>
                           </div>
-      
                       </div>
-      
-                    
-      
-                  <div class="cf"></div>
-      
-              </div>
-
+                     </a>
+</div>
 </ion-content>
 </ion-view>
