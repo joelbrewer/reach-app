@@ -239,6 +239,7 @@
       var params = new Object();
       //params.image_angle = angle;
       params.user_id = $scope.user.id;
+      params.image_type = "user_avatar";
 
       options.params = params;
       console.log(options);
@@ -261,7 +262,7 @@
         deferred.reject();
       }
 
-      ft.upload(url, API.url + '/upload_avatar', win, fail, options);
+      ft.upload(url, API.url + '/upload_image', win, fail, options);
       return deferred.promise;
     }
 
@@ -595,6 +596,7 @@
 
       var params = new Object();
       params.company_id = $scope.selected_company;
+      params.image_type = "company_logo";
 
       options.params = params;
       console.log(options);
@@ -617,7 +619,7 @@
         deferred.reject();
       }
 
-      ft.upload(url, API.url + '/upload_logo', win, fail, options);
+      ft.upload(url, API.url + '/upload_image', win, fail, options);
       return deferred.promise;
     }
 
