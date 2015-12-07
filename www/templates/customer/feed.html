@@ -1,40 +1,49 @@
 <ion-view view-title="{{current_user.first_name}} {{current_user.last_name}}">
-<ion-nav-bar  class="bar-positive">
-</ion-nav-bar>
+
+<ion-nav-bar class="bar-positive"></ion-nav-bar>
 <ion-nav-buttons side="right">
-<button class="button icon ion-gear-a button-stable" ng-click="vm.goTo('/customer/profile')"></button>
+  <button class="button icon ion-gear-a button-stable" ng-click="vm.goTo('customer-profile')"></button>
 </ion-nav-buttons>
-<ion-content scroll="true"  on-swipe-left="vm.goTo('/company/profile')"> 
-<ion-refresher on-refresh="doRefresh()"></ion-refresher>
-<div class="list">
-<a ng-repeat="message in messages" class="item item-avatar" href="#">
-    <div ng-if="message.type == 'bulletin'">                      
-      <img class="profile-pic left" ng-src="img/default-avatar.png"/>
-      <div ng-click="goToBulletin({{message.company_id}});">
+
+
+<ion-content scroll="true" drag-content="true" on-swipe-left="vm.goTo('tab.profile')">
+  <ion-refresher on-refresh="doRefresh()"></ion-refresher>
+
+  <div class="list" style="display:none;">
+    <a ng-repeat="message in messages" class="item item-avatar" href="#">
+      <div ng-if="message.type == 'bulletin'">
+        <img class="profile-pic left" ng-src="img/default-avatar.png"/>
+
+        <div ng-click="goToBulletin({{message.company_id}});">
           <div class="message-detail">
             <span class="bold">
               <div><i class="ion-ios-star"></i>{{companies[message.company_id].name}}</div>
             </span>
           </div>
-          <div class="message" >
-            {{message.message_content}} 
+          <div class="message">
+            {{message.message_content}}
           </div>
+        </div>
       </div>
-    </div>
-    <div ng-if="message.type == 'message'">
-      <img class="profile-pic left" ng-src="img/default-avatar.png"/>
-      <div ng-click="vm.goTo('/customer/chat/{{message.contact_id}}/{{message.company_id}}');">
+      <div ng-if="message.type == 'message'">
+        <img class="profile-pic left" ng-src="img/default-avatar.png"/>
+
+        <div ng-click="vm.goTo('/customer/chat/{{message.contact_id}}/{{message.company_id}}');">
           <div class="message-detail">
-              <span class="bold">{{contacts[message.contact_id].first_name}} {{contacts[message.contact_id].last_name}}</span>,
-              <span am-time-ago="message.date">{{message.timestamp_queued * 1000 |date:"medium"}}</span>
+            <span
+              class="bold">{{contacts[message.contact_id].first_name}} {{contacts[message.contact_id].last_name}}</span>,
+            <span am-time-ago="message.date">{{message.timestamp_queued * 1000 |date:"medium"}}</span>
           </div>
-          <div ng-if="message.recipient_user_id === message.contact_id" class="message" autolinker>You: {{message.message_content}} 
+          <div ng-if="message.recipient_user_id === message.contact_id" class="message" autolinker>You:
+            {{message.message_content}}
           </div>
-          <div ng-if="message.recipient_user_id === uid" class="message" ng-bind-html="message.message_content" autolinker>
+          <div ng-if="message.recipient_user_id === uid" class="message" ng-bind-html="message.message_content"
+               autolinker>
           </div>
+        </div>
       </div>
-    </div>      
-</a>
-</div>
+    </a>
+  </div>
 </ion-content>
 </ion-view>
+

@@ -16,6 +16,8 @@ var ReachApp = angular.module('starter',
     'ionic.service.core',
     'pusher-angular',
     'angular-jwt'
+    //'ngAnimate',
+    //'ngTouch'
   ]);
 
 //var ReachApp = angular.module('starter', ['ionic','pusher-angular', 'angularMoment'])

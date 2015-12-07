@@ -4,8 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
-
+    <!--
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    -->
+    <link href="http://code.ionicframework.com/1.1.1/css/ionic.css" rel="stylesheet">
+
     <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
@@ -13,21 +16,26 @@
     -->
 
     <!-- ionic/angularjs js -->
+    <!--
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-<script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script>
+    -->
+
+    <script src="http://code.ionicframework.com/1.1.1/js/ionic.bundle.min.js"></script>
+    <script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.mobile.js"></script>
 
     <!-- moment -->
-<!--
+    <!--
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
--->
+    -->
     <!-- angular moment -->
-<!--
+    <!--
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-moment/0.8.2/angular-moment.min.js"></script>
--->
+    -->
 
     <!-- cordova script (this will be a 404 during development) -->
     <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
-<!-- <script src="cordova.js"></script> -->
+    <!-- <script src="cordova.js"></script> -->
 
     <!-- angular-jwt -->
     <script type="text/javascript" src="https://rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"></script>
@@ -44,12 +52,9 @@
     <script src="js/controllers.js"></script>
     <script src="js/routes.js"></script>
     <script src="js/jwt-auth.js"></script>
-
-
   </head>
-  <body class="platform-ios">
-<ion-nav-view animation="slide-right-left">
-  <!-- Center content -->
-</ion-nav-view>
+
+  <body class="platform-ios" animationFoo="slide-left-right-ios7">
+    <ion-nav-view animation="slide-right-left"></ion-nav-view>
   </body>
 </html>

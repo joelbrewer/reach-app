@@ -8,12 +8,15 @@
   CustomerFeedController.$inject = [
                               '$scope',
                               '$pusher',
+                              '$state',
                               'NavigationService',
                               'DataService',
-                              'SessionService'
+                              'SessionService',
+                              '$ionicSlideBoxDelegate',
+                              '$ionicHistory','$ionicViewSwitcher'
                             ];
 
-  function CustomerFeedController($scope, $pusher, NavigationService, DataService, SessionService) {
+  function CustomerFeedController($scope, $pusher, $state, NavigationService, DataService, SessionService, $ionicSlideBoxDelegate,$ionicHistory,$ionicViewSwitcher) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -74,8 +77,100 @@
     };
 
     function goTo(path) {
-      NavigationService.setLocation(path);
+      console.log("goTo(" + path + ")");
+      //NavigationService.setLocation(path);
+      $ionicViewSwitcher.nextDirection('forward'); // 'forward', 'back', etc.
+      $ionicHistory.nextViewOptions({
+        disableAnimate: false,
+        disableBack: true
+      });
+      //$state.go("tab.profile");
+      $state.go(path);
     }
+
+/*
+
+    $scope.data = {
+      numViewableSlides : 0,
+      slideIndex : 0,
+      initialInstruction : true,
+      secondInstruction : false,
+      slides : [
+        {
+          'template' : 'firstSlide.html',
+          'viewable' : true
+        },
+
+        {
+          'template' : 'bonusSlide.html',
+          'viewable' : false
+        },
+
+        {
+          'template' : 'secondSlide.html',
+          'viewable' : true
+        },
+
+        {
+          'template' : 'thirdSlide.html',
+          'viewable' : true
+        }
+      ]
+    };
+
+    var countSlides = function() {
+      $scope.data.numViewableSlides = 0;
+
+      _.forEach($scope.data.slides, function(slide) {
+        if(slide.viewable === true) $scope.data.numViewableSlides++;
+      })
+
+      console.log($scope.data.numViewableSlides + " viewable slides");
+
+    }
+
+    countSlides();
+
+    // Called to navigate to the main app
+
+    $scope.startApp = function() {
+      console.log('startApp()');
+      $state.go('main');
+    };
+
+    $scope.next = function() {
+      console.log("next");
+      $ionicSlideBoxDelegate.next();
+    };
+    $scope.previous = function() {
+      console.log("previous");
+      $ionicSlideBoxDelegate.previous();
+    };
+
+    $scope.showBonus = function() {
+      console.log("showBonus");
+      var index = _.findIndex($scope.data.slides, { template : 'bonusSlide.html' });
+      $scope.data.slides[index].viewable = true;
+      countSlides();
+      $scope.data.initialInstruction = false
+      $scope.data.secondInstruction = true;
+
+      $ionicSlideBoxDelegate.update();
+    };
+
+    // Called each time the slide changes
+    $scope.slideChanged = function(index) {
+      console.log("slideChanged");
+      $scope.data.slideIndex = index;
+    };
+
+
+    //$state.go('main');
+
+*/
+
+
+
   }
 })();
 
@@ -308,12 +403,14 @@
     .controller('CompanyProfileController', CompanyProfileController);
   CompanyProfileController.$inject = [
                               '$scope',
+                              '$state',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+			                        'SessionService',
+                              '$ionicHistory','$ionicViewSwitcher'
                             ];
 
-  function CompanyProfileController($scope, DataService, NavigationService, SessionService) {
+  function CompanyProfileController($scope, $state, DataService, NavigationService, SessionService, $ionicHistory, $ionicViewSwitcher) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -343,7 +440,15 @@
     };
 
     function goTo(path) {
-      NavigationService.setLocation(path);
+      //NavigationService.setLocation(path);
+      console.log("CompanyProfileController : goTo(" + path + ")");
+      //NavigationService.setLocation(path);
+      $ionicViewSwitcher.nextDirection('back'); // 'forward', 'back', etc.
+      $ionicHistory.nextViewOptions({
+        disableAnimate: false,
+        disableBack: true
+      });
+      $state.go("customer");
     }
   }
 })();
