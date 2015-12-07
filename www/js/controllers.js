@@ -182,21 +182,24 @@
     .controller('CustomerProfileController', CustomerProfileController);
 
   CustomerProfileController.$inject = [
-                              '$cordovaImagePicker',
                               '$scope',
-                              'NavigationService',
-                              'AuthenticationService',
+                              '$q',
                               'DataService',
-                              'SessionService'
+                              'NavigationService',
+                              '$cordovaImagePicker',
+                              'AuthenticationService',
+                              'SessionService',
+                              'API'
                             ];
 
-  function CustomerProfileController($cordovaImagePicker, AuthenticationService, $scope, NavigationService, DataService, SessionService) {
+  function CustomerProfileController($scope, $q, DataService, NavigationService, $cordovaImagePicker, AuthenticationService, SessionService, API) {
 
     var vm = this;
     vm.goTo = goTo;
     vm.pick_photo = pick_photo;
 
     $scope.pass = {};
+    $scope.api = API.url;
 
     refresh_data();
 
@@ -204,8 +207,8 @@
 
       var options = {
         maximumImagesCount: 1,
-        width: 1024,
-        height: 768,
+        width: 512,
+        height: 384,
         quality: 80,
         destinationType: Camera.DestinationType.DATA_URL
       };
@@ -215,15 +218,61 @@
           for (var i = 0; i < results.length; i++) {
             $scope.user.avatar = results[i];
             console.log(results);
+            upload_image(results[i]).then(function() {
+              console.log("Uploaded!");
+            });
           }
           console.log($scope.user);
         });
     }
 
+    function upload_image(url) {
+      var deferred = $q.defer();
+
+      var token = "Bearer " + SessionService.get('jwt');
+      var options = new FileUploadOptions();
+      options.fileKey = "file";
+      options.fileName = url.substr(url.lastIndexOf('/')+1);
+      options.mimeType = "image/jpeg";
+      options.headers = { 'Authorization': token };
+
+      var params = new Object();
+      //params.image_angle = angle;
+      params.user_id = $scope.user.id;
+
+      options.params = params;
+      console.log(options);
+
+      options.chunkedMode = false;
+
+      var ft = new FileTransfer();
+
+      var win = function(r) {
+        console.log("Code = " + r.responseCode);
+        console.log("Response = " + r.response);
+        console.log("Sent = " + r.bytesSent);
+        deferred.resolve();
+      }
+
+      var fail = function(error) {
+        alert("An error has occurred: Code = " + error.code);
+        console.log("upload error source " + error.source);
+        console.log("upload error target " + error.target);
+        deferred.reject();
+      }
+
+      ft.upload(url, API.url + '/upload_avatar', win, fail, options);
+      return deferred.promise;
+    }
+
+
     function refresh_data(){
       $scope.uid = SessionService.getJson('uid');
       DataService.getUser($scope.uid).then(function(response){
         $scope.user = response;
+        if ($scope.user.avatar) {
+          $scope.user.avatar = API.url + $scope.user.avatar;
+        }
       });
     }
 
@@ -429,15 +478,21 @@
                               'DataService',
                               'NavigationService',
 			                        'SessionService',
-                              '$ionicHistory','$ionicViewSwitcher'
+                              '$ionicHistory',
+                              '$ionicViewSwitcher',
+                              'API',
                             ];
 
-  function CompanyProfileController($scope, $state, DataService, NavigationService, SessionService, $ionicHistory, $ionicViewSwitcher) {
+  function CompanyProfileController($scope, $state, DataService, 
+      NavigationService, SessionService, $ionicHistory, $ionicViewSwitcher,
+      API) {
+
 
     var vm = this;
     vm.goTo = goTo;
 
     refresh_data();
+
 
     function refresh_data(){
 
@@ -449,6 +504,9 @@
       $scope.role_super = SessionService.getJson('role_super');
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
+        if ($scope.companies[$scope.selected_company].logo) {
+          $scope.companies[$scope.selected_company].logo = API.url + $scope.companies[$scope.selected_company].logo;
+        }
       });
     }
 
@@ -481,19 +539,87 @@
   angular
     .module('starter')
     .controller('CompanyProfileEditController', CompanyProfileEditController);
+  
   CompanyProfileEditController.$inject = [
                               '$scope',
+                              '$q',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+                              '$cordovaImagePicker',
+                              'AuthenticationService',
+                              'SessionService',
+                              'API'
                             ];
 
-  function CompanyProfileEditController($scope, DataService, NavigationService, SessionService) {
+  function CompanyProfileEditController($scope, $q, DataService, NavigationService,
+      $cordovaImagePicker, AuthenticationService, SessionService, API) {
 
     var vm = this;
     vm.goTo = goTo;
+    vm.pick_photo = pick_photo;
 
     refresh_data();
+
+    function pick_photo() {
+
+      var options = {
+        maximumImagesCount: 1,
+        width: 512,
+        height: 384,
+        quality: 80,
+        destinationType: Camera.DestinationType.DATA_URL
+      };
+
+      $cordovaImagePicker.getPictures(options)
+        .then(function (results) {
+          for (var i = 0; i < results.length; i++) {
+            $scope.company.logo = results[i];
+            console.log(results);
+            upload_image(results[i]).then(function() {
+              console.log("Uploaded!");
+            });
+          }
+          console.log($scope.user);
+        });
+    }
+
+    function upload_image(url) {
+      var deferred = $q.defer();
+
+      var token = "Bearer " + SessionService.get('jwt');
+      var options = new FileUploadOptions();
+      options.fileKey = "file";
+      options.fileName = url.substr(url.lastIndexOf('/')+1);
+      options.mimeType = "image/jpeg";
+      options.headers = { 'Authorization': token };
+
+      var params = new Object();
+      params.company_id = $scope.selected_company;
+
+      options.params = params;
+      console.log(options);
+
+      options.chunkedMode = false;
+
+      var ft = new FileTransfer();
+
+      var win = function(r) {
+        console.log("Code = " + r.responseCode);
+        console.log("Response = " + r.response);
+        console.log("Sent = " + r.bytesSent);
+        deferred.resolve();
+      }
+
+      var fail = function(error) {
+        alert("An error has occurred: Code = " + error.code);
+        console.log("upload error source " + error.source);
+        console.log("upload error target " + error.target);
+        deferred.reject();
+      }
+
+      ft.upload(url, API.url + '/upload_logo', win, fail, options);
+      return deferred.promise;
+    }
 
     function refresh_data(){
 
@@ -595,7 +721,7 @@
                               '$scope',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+            'SessionService'
                             ];
 
   function CompanyBulletinController($scope, DataService, NavigationService, SessionService) {
@@ -651,7 +777,7 @@
                               '$scope',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+            'SessionService'
                             ];
 
   function CompanyUserController($scope, DataService, NavigationService, SessionService) {
@@ -680,11 +806,11 @@
       });
 
       if($scope.is_employee || $scope.is_admin || $scope.is_super){
-      	DataService.getCustomers($scope.selected_company).then(function(response){
-      	  $scope.customers = response;
-      	});
+        DataService.getCustomers($scope.selected_company).then(function(response){
+          $scope.customers = response;
+        });
       }else{
-      	  $scope.customers = {};
+          $scope.customers = {};
       }
 
     }
@@ -714,7 +840,7 @@
                               '$stateParams',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+            'SessionService'
                             ];
 
   function CompanyPermsController($scope, $stateParams, DataService, NavigationService, SessionService) {
@@ -770,7 +896,7 @@
                               '$pusher',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+            'SessionService'
                             ];
 
   function CompanyFeedController($scope, $pusher, DataService, NavigationService, SessionService) {
@@ -869,7 +995,7 @@
                               '$ionicScrollDelegate',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+            'SessionService'
                             ];
 
   function CompanyChatController($scope, $stateParams, $pusher, $ionicScrollDelegate, DataService, NavigationService, SessionService) {
@@ -950,7 +1076,7 @@
                               '$scope',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+            'SessionService'
                             ];
 
   function CompanyBulletinAddController($scope, DataService, NavigationService, SessionService) {
@@ -1016,7 +1142,7 @@
                               '$scope',
                               'DataService',
                               'NavigationService',
-			      'SessionService'
+            'SessionService'
                             ];
 
   function CompanyUserAddController($scope, DataService, NavigationService, SessionService) {

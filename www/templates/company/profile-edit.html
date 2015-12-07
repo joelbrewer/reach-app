@@ -7,9 +7,16 @@
 <ion-content scroll="true"> 
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
 <div class="list" style="padding:10px;">
-  <div class="item item-image">
-    <img src="img/gymfed.jpeg">
+
+  <div ng-if="company.logo" class="item item-image avatar">
+    <img ng-src="{{company.logo}}">
   </div>
+
+  <button class="button button-block button-positive"
+          ng-click="vm.pick_photo()">
+    Upload Logo
+  </button>
+
   <label class="item item-input ">
     <span class="input-label">Company Name</span>
     <input type="text" ng-model="company.name">

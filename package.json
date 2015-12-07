@@ -28,7 +28,9 @@
       "locator": "https://github.com/wymsee/cordova-imagePicker.git",
       "id": "com.synconset.imagepicker"
     },
-    "cordova-plugin-camera"
+    "cordova-plugin-camera",
+    "ionic-plugin-keyboard",
+    "cordova-plugin-file-transfer"
   ],
   "cordovaPlatforms": [
     "android",
