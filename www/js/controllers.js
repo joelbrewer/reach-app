@@ -529,7 +529,7 @@
         disableAnimate: false,
         disableBack: true
       });
-      $state.go("customer");
+      $state.go(path);
     }
   }
 })();
