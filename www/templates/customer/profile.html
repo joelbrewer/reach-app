@@ -1,9 +1,9 @@
 <ion-view view-title="{{user.first_name}} {{user.last_name}}">
 <ion-nav-bar  class="bar-positive">
-  <ion-nav-back-button  class="button-clear">
-<i class="ion-arrow-left-c"></i> Back
-  </ion-nav-back-button>
 </ion-nav-bar>
+<ion-nav-buttons side="left">
+<button class="button icon ion-arrow-left-c button-clear" ng-click="vm.goTo('/customer')">Back</button>
+</ion-nav-buttons>
 <ion-content scroll="true">
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
 
