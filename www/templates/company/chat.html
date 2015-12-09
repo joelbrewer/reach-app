@@ -9,7 +9,9 @@
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
              <div ng-repeat="message in messages" class="message-wrapper">
                   <div ng-if="uid !== message.recipient_user_id">
-                    <img class="profile-pic left" src="img/default-avatar.png" onerror="onProfilePicError(this)" />
+                    <img ng-if="recipient.avatar" class="profile-pic left"
+                                             ng-src="{{vm.api}}{{recipient.avatar}}" onerror="onProfilePicError(this)" />
+                    <img ng-hide="recipient.avatar" class="profile-pic left" src="img/default-avatar.png" onerror="onProfilePicError(this)" />
                       <div class="chat-bubble left">
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
@@ -22,7 +24,10 @@
                   </div>
       
                   <div ng-if="uid === message.recipient_user_id">
-                       <img class="profile-pic right" src="img/default-avatar.png" />
+
+                      <img ng-if="user.avatar" class="profile-pic right"
+                                               ng-src="{{vm.api}}{{user.avatar}}" />
+                      <img ng-hide="user.avatar" class="profile-pic right" src="img/default-avatar.png" />
                       <div class="chat-bubble right">
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 

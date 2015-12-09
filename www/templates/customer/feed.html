@@ -14,6 +14,13 @@
       <div ng-if="message.type == 'bulletin'">
         <img class="profile-pic left" ng-src="img/default-avatar.png"/>
         <div ng-click="goToBulletin({{message.company_id}});">
+        <img ng-if="companies[message.company_id].logo" class="profile-pic left" ng-src="{{vm.api}}{{companies[message.company_id].logo}}">
+        <img ng-hide="companies[message.company_id].logo" class="profile-pick left" ng-src="img/default-avatar.png">
+
+<!--
+        <div ng-click="goToBulletin({{message.company_id}});">
+-->
+        <div>
           <div class="message-detail">
             <span class="bold">
               <div><i class="ion-ios-star"></i>{{companies[message.company_id].name}}</div>
@@ -25,7 +32,9 @@
         </div>
       </div>
       <div ng-if="message.type == 'message'">
-        <img class="profile-pic left" ng-src="img/default-avatar.png"/>
+        <img ng-if="contacts[message.contact_id].avatar" class="profile-pic
+        left" ng-src="{{vm.api}}{{contacts[message.contact_id].avatar}}"/>
+        <img ng-hide="contacts[message.contact_id].avatar" class="profile-pic left" ng-src="img/default-avatar.png"/>
 
         <div ui-sref="customer-chat({contact_id: message.contact_id, company_id: message.company_id})">
           <div class="message-detail">

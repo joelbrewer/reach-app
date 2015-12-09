@@ -6,6 +6,7 @@
     .controller('CustomerFeedController', CustomerFeedController);
 
   CustomerFeedController.$inject = [
+                              'API',
                               '$scope',
                               '$pusher',
                               '$state',
@@ -16,10 +17,11 @@
                               '$ionicHistory','$ionicViewSwitcher'
                             ];
 
-  function CustomerFeedController($scope, $pusher, $state, NavigationService, DataService, SessionService, $ionicSlideBoxDelegate,$ionicHistory,$ionicViewSwitcher) {
+  function CustomerFeedController(API, $scope, $pusher, $state, NavigationService, DataService, SessionService, $ionicSlideBoxDelegate,$ionicHistory,$ionicViewSwitcher) {
 
     var vm = this;
     vm.goTo = goTo;
+    vm.api = API.url;
 
     refresh_data();
 
@@ -782,13 +784,16 @@
                               '$scope',
                               'DataService',
                               'NavigationService',
-            'SessionService'
+                              'SessionService',
+                              'API'
+
                             ];
 
-  function CompanyUserController($scope, DataService, NavigationService, SessionService) {
+  function CompanyUserController($scope, DataService, NavigationService, SessionService, API) {
 
     var vm = this;
     vm.goTo = goTo;
+    vm.api = API.url;
 
     refresh_data();
 
@@ -901,13 +906,15 @@
                               '$pusher',
                               'DataService',
                               'NavigationService',
-            'SessionService'
+            'SessionService',
+            'API'
                             ];
 
-  function CompanyFeedController($scope, $pusher, DataService, NavigationService, SessionService) {
+  function CompanyFeedController($scope, $pusher, DataService, NavigationService, SessionService, API) {
 
     var vm = this;
     vm.goTo = goTo;
+    vm.api = API.url;
 
     $scope.contacts = [];
 
@@ -1000,13 +1007,15 @@
                               '$ionicScrollDelegate',
                               'DataService',
                               'NavigationService',
-            'SessionService'
+                              'SessionService',
+                              'API'
                             ];
 
-  function CompanyChatController($scope, $stateParams, $pusher, $ionicScrollDelegate, DataService, NavigationService, SessionService) {
+  function CompanyChatController($scope, $stateParams, $pusher, $ionicScrollDelegate, DataService, NavigationService, SessionService, API) {
 
     var vm = this;
     vm.goTo = goTo;
+    vm.api = API.url;
 
     refresh_data();
 
@@ -1026,6 +1035,10 @@
 
       DataService.getUser($stateParams.contact_id).then(function(response){
         $scope.user = response;
+      });
+
+      DataService.getUser($scope.uid).then(function(response){
+        $scope.recipient = response;
       });
 
       DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){
@@ -1147,7 +1160,7 @@
                               '$scope',
                               'DataService',
                               'NavigationService',
-            'SessionService'
+                              'SessionService'
                             ];
 
   function CompanyUserAddController($scope, DataService, NavigationService, SessionService) {

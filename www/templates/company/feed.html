@@ -3,7 +3,10 @@
 <ion-refresher on-refresh="doRefresh()"></ion-refresher>
 <div class="list">
                     <a ng-repeat="message in messages" class="item item-avatar" href="#">
-                    <img class="profile-pic " ng-src="img/default-avatar.png"/>
+                    <img ng-if="contacts[message.contact_id].avatar"
+                         class="profile-pic "
+                         ng-src="{{vm.api}}{{contacts[message.contact_id].avatar}}"/>
+                    <img ng-hide="contacts[message.contact_id].avatar" class="profile-pic " ng-src="img/default-avatar.png"/>
                       <div ui-sref="company-chat({contact_id: message.contact_id, company_id: message.company_id})">
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 

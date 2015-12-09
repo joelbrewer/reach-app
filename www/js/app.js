@@ -38,6 +38,8 @@ var ReachApp = angular.module('starter',
    };
  });
 
+  ReachApp.directive
+
 
 ReachApp.run(function($ionicPlatform,$rootScope,$state, SessionService) {
 
