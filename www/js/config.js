@@ -7,7 +7,7 @@
       //url: 'http://52.27.2.199/reach'
       //url: 'https://reachapp.ngrok.io'
       //url: 'http://dev1.reachplatform.io'
-      url: 'http://dev1.reachplatform.io/reach'
+      url: 'https://dev1.reachplatform.io'
     })
     .constant('Config', {
       environment: 'test'
