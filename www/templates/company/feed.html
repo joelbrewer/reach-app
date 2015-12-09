@@ -4,7 +4,7 @@
 <div class="list">
                     <a ng-repeat="message in messages" class="item item-avatar" href="#">
                     <img class="profile-pic " ng-src="img/default-avatar.png"/>
-                      <div ng-click="vm.goTo('/company/chat/{{message.contact_id}}/{{message.company_id}}');">
+                      <div ui-sref="company-chat({contact_id: message.contact_id, company_id: message.company_id})">
                           <div class="message-detail">
                               <span ng-click="viewProfile(message)" 
                                   class="bold">{{contacts[message.contact_id].first_name}} {{contacts[message.contact_id].last_name}}</span>,

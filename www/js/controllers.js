@@ -73,7 +73,7 @@
 
     $scope.goToBulletin = function(company_id) {
       NavigationService.selected_company = company_id;
-      goTo('/company/bulletins');
+      goTo('tab.bulletins');
     };
 
     function goTo(path) {
