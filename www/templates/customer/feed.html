@@ -13,10 +13,7 @@
     <a ng-repeat="message in messages" class="item item-avatar" href="#">
       <div ng-if="message.type == 'bulletin'">
         <img class="profile-pic left" ng-src="img/default-avatar.png"/>
-<!--
         <div ng-click="goToBulletin({{message.company_id}});">
--->
-        <div >
           <div class="message-detail">
             <span class="bold">
               <div><i class="ion-ios-star"></i>{{companies[message.company_id].name}}</div>
