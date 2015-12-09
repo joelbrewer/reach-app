@@ -6,7 +6,6 @@
     .controller('CustomerFeedController', CustomerFeedController);
 
   CustomerFeedController.$inject = [
-                              'API',
                               '$scope',
                               '$pusher',
                               '$state',
@@ -14,10 +13,13 @@
                               'DataService',
                               'SessionService',
                               '$ionicSlideBoxDelegate',
-                              '$ionicHistory','$ionicViewSwitcher'
+                              '$ionicHistory',
+                              '$ionicViewSwitcher',
+                              'API'
                             ];
 
-  function CustomerFeedController(API, $scope, $pusher, $state, NavigationService, DataService, SessionService, $ionicSlideBoxDelegate,$ionicHistory,$ionicViewSwitcher) {
+  function CustomerFeedController($scope, $pusher, $state, NavigationService, DataService, SessionService, $ionicSlideBoxDelegate,
+      $ionicHistory,$ionicViewSwitcher, API) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -322,13 +324,15 @@
                               'SessionService',
                               '$stateParams',
                               '$pusher',
-                              '$ionicScrollDelegate'
+                              '$ionicScrollDelegate',
+                              'API'
                             ];
 
-  function CustomerChatController($scope, NavigationService, DataService, SessionService, $stateParams, $pusher, $ionicScrollDelegate) {
+  function CustomerChatController($scope, NavigationService, DataService, SessionService, $stateParams, $pusher, $ionicScrollDelegate, API) {
 
     var vm = this;
     vm.goTo = goTo;
+    vm.api = API.url;
 
     refresh_data();
 
@@ -1038,7 +1042,7 @@
       });
 
       DataService.getUser($scope.uid).then(function(response){
-        $scope.recipient = response;
+        $scope.current_user = response;
       });
 
       DataService.getMessages($stateParams.contact_id,$stateParams.company_id).then(function(response){

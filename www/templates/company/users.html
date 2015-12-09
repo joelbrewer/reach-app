@@ -24,7 +24,7 @@
    <h2>Customers</h2> 
   </div>
   <div class="item item-avatar item-button-right" ng-repeat="customer in customers" >
-    <img ng-if="customer.avatar" src="{{vm.api}}{{employee.avatar}}">
+    <img ng-if="customer.avatar" src="{{vm.api}}{{customer.avatar}}">
     <img ng-hide="customer.avatar" src="img/default-avatar.png">
     <h2>{{customer.first_name}} {{customer.last_name}}</h2>
     <p>Role</p>
