@@ -634,6 +634,9 @@
       DataService.getCompanies().then(function(response){
         $scope.companies = response;
         $scope.company = $scope.companies[$scope.selected_company];
+        if ($scope.company.logo) {
+          $scope.company.logo = API.url + $scope.company.logo;
+        }
       });
     }
 
