@@ -26,24 +26,30 @@
   </div>
   <label class="item item-radio ">
     <input type="radio" name="group"  checked="checked" ng-model="invite.role" value="customer">
-    <div class="item-content">
-     Customer 
+    <div class="radio-content">
+      <div class="item-content">
+      Customer 
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
     </div>
-    <i class="radio-icon ion-checkmark"></i>
   </label>
   <label class="item item-radio">
     <input type="radio" name="group" ng-model="invite.role" value="employee">
-    <div class="item-content">
-      Employee
+    <div class="radio-content">
+      <div class="item-content">
+        Employee
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
     </div>
-    <i class="radio-icon ion-checkmark"></i>
   </label>
   <label class="item item-radio">
     <input type="radio" name="group" ng-model="invite.role" value="admin">
-    <div class="item-content">
-      Company Administrator
+    <div class="radio-content">
+      <div class="item-content">
+        Company Administrator
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
     </div>
-    <i class="radio-icon ion-checkmark"></i>
   </label>
 <button class="button button-block button-positive" ng-click="invite_user(invite);">
 Invite
