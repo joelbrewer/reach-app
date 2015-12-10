@@ -304,7 +304,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/invite',
-        data: "email="+invite.email+"&company_id="+invite.company_id+"&role="+invite.role,
+        data: "email="+invite.email+"&company_id="+invite.company_id+"&role="+invite.role+"&first_name="+invite.first+"&last_name="+invite.last,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
