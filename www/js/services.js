@@ -6,9 +6,9 @@
     .module('starter')
     .factory('AuthenticationService', AuthenticationService);
 
-  AuthenticationService.$inject = ['PushService', 'SessionService', '$http', 'API', 'DataService','NavigationService', 'jwtHelper'];
+  AuthenticationService.$inject = ['PushService', 'SessionService', '$http', 'API', 'DataService','NavigationService', 'jwtHelper','$httpParamSerializerJQLike'];
 
-  function AuthenticationService(PushService, SessionService, $http, API, DataService, NavigationService, jwtHelper) {
+  function AuthenticationService(PushService, SessionService, $http, API, DataService, NavigationService, jwtHelper, $httpParamSerializerJQLike) {
     var service = {};
     service.login = login;
     service.logout = logout;
@@ -26,7 +26,7 @@
         method: 'POST',
         url: API.url + '/login',
         skipAuthorization: true,
-        data: "email=" + credentials.email + "&password=" + credentials.password,
+        data: $httpParamSerializerJQLike(credentials),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).success(function(data) {
         cacheSession(data);
@@ -91,9 +91,9 @@
     .module('starter')
     .factory('DataService', DataService);
 
-  DataService.$inject = ['SessionService', '$http', 'API', '$q'];
+  DataService.$inject = ['SessionService', '$http', 'API', '$q','$httpParamSerializerJQLike'];
 
-  function DataService(SessionService, $http, API, $q) {
+  function DataService(SessionService, $http, API, $q, $httpParamSerializerJQLike) {
 
     var service = {
         getCurrentUserId : getCurrentUserId,
@@ -126,7 +126,6 @@
 
       return $http({method:'GET', url:API.url + '/user/'+uid})
         .then(function(resulty) {
-//alert(angular.toJson(resulty.data));
             return resulty.data;
         });
     }
@@ -135,7 +134,6 @@
 
       return $http({method:'GET', url:API.url + '/perm/'+uid+'/'+cid})
         .then(function(resulty) {
-//alert(angular.toJson(resulty.data));
             return resulty.data;
         });
     }
@@ -145,7 +143,6 @@
       return $http({method:'GET', url:API.url + '/employee/'+cid})
         .then(function(resulty) {
             SessionService.setJson('employees-'+cid,resulty.data);
-//alert(angular.toJson(resulty.data));
             return resulty.data;
         });
     }
@@ -155,17 +152,12 @@
       return $http({method:'GET', url:API.url + '/customer/'+cid})
         .then(function(resulty) {
             SessionService.setJson('customer_list',resulty.data);
-//alert(angular.toJson(resulty.data));
             return resulty.data;
         });
     }
 
     function getCompanies(){
 
-//      var companies = SessionService.getJson('companies');
-//      if(companies !== null){
-//        return companies;
-//      }
       return $http({method:'GET', url:API.url + '/company'})
         .then(function(resulty) {
             SessionService.setJson('companies',resulty);
@@ -176,7 +168,6 @@
     function getCompany(cid){
       return $http({method:'GET', url:API.url + '/company/'+cid})
         .then(function(resulty) {
-//alert(angular.toJson(resulty.data));
             return resulty.data;
         });
     }
@@ -217,11 +208,13 @@
 
     function sendMessage(sender_uid, company_id, recipient_uid, message_content) {
 
+      var form_data = {"sender_uid":sender_uid,"company_id":company_id,"recipient_uid":recipient_uid,"message_content":message_content};
+
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
       return $http({
         method: 'POST',
         url: API.url + '/message',
-        data: "sender_uid="+sender_uid+"&company_id="+company_id+"&recipient_uid="+recipient_uid+"&message_content="+message_content,
+        data: $httpParamSerializerJQLike(form_data),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
@@ -235,7 +228,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/bulletin',
-        data: "sender_uid="+bulletin.sender_uid+"&company_id="+bulletin.company_id+"&message_content="+bulletin.message_content,
+        data: $httpParamSerializerJQLike(bulletin), 
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
@@ -249,7 +242,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/user',
-        data: "id="+user.id+"&first_name="+user.first_name+"&last_name="+user.last_name+"&email="+user.email+"&company_name="+user.company_name+"&position="+user.position+'&update_pass='+user.update_pass,
+        data: $httpParamSerializerJQLike(user),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
@@ -263,7 +256,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/company',
-        data: "id="+company.id+"&name="+company.name+"&description="+company.description+"&long_desc="+company.long_desc,
+        data: $httpParamSerializerJQLike(company),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
@@ -277,7 +270,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/company/add',
-        data: "name="+company.name+"&description="+company.description,
+        data: $httpParamSerializerJQLike(company),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
@@ -290,7 +283,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/perm',
-        data: "id="+perm.id+"&user_id="+perm.user_id+"&company_id="+perm.company_id+"&role="+perm.role,
+        data: $httpParamSerializerJQLike(perm),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
@@ -304,7 +297,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/invite',
-        data: "email="+invite.email+"&company_id="+invite.company_id+"&role="+invite.role+"&first_name="+invite.first+"&last_name="+invite.last,
+        data: $httpParamSerializerJQLike(perm),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
