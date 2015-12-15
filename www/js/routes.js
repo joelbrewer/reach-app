@@ -25,6 +25,7 @@
   })
   .state('customer-profile', {
     url: '/customer/profile',
+    cache: false,
     templateUrl: 'templates/customer/profile.html',
     controller: 'CustomerProfileController as vm'
   })
