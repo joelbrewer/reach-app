@@ -187,6 +187,7 @@
 
   CustomerProfileController.$inject = [
                               '$scope',
+                              '$state',
                               '$q',
                               'DataService',
                               'NavigationService',
@@ -196,7 +197,7 @@
                               'API'
                             ];
 
-  function CustomerProfileController($scope, $q, DataService, NavigationService, $cordovaImagePicker, AuthenticationService, SessionService, API) {
+  function CustomerProfileController($scope, $state, $q, DataService, NavigationService, $cordovaImagePicker, AuthenticationService, SessionService, API) {
 
     var vm = this;
     vm.goTo = goTo;
@@ -296,7 +297,7 @@
 
     $scope.logout = function logout() {
       SessionService.reset();
-      goTo('/login');
+      $state.go('login');
     };
 
     $scope.doRefresh = function() {
