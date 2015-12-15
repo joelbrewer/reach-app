@@ -297,7 +297,7 @@
       return $http({
         method: 'POST',
         url: API.url + '/invite',
-        data: $httpParamSerializerJQLike(perm),
+        data: $httpParamSerializerJQLike(invite),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
       }).then(function(data) {
